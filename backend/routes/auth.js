@@ -53,9 +53,12 @@ router.post("/login", homeRedirect, async (req, res) => {
 router.get("/getUser", async (req, res) => {
 	if (req.session.userId) {
 		const user = await User.findById(req.session.userId);
-		return res.json({ username: user.username });
+		if (user) return res.json({ username: user.username });
+		else {
+			return res.status(404).json({ username: null });
+		}
 	} else {
-		return res.json({ username: null });
+		return res.status(404).json({ username: null });
 	}
 });
 

@@ -11,7 +11,7 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 		const productPrice = details.price,
 			title = details.title;
 		const productOnwer = await User.findById(req.session.userId);
-		console.log(details);
+		// console.log(details);
 		if (!productOnwer) {
 			return res
 				.status(401)

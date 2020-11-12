@@ -15,7 +15,7 @@ const isLoggedIn = (req, res, next) => {
 const homeRedirect = (req, res, next) => {
 	// console.log(req.session.userId);
 	if (req.session.userId) {
-		res.json("You are already logged in!");
+		res.status(406).json("You are already logged in!");
 	} else {
 		next();
 	}
