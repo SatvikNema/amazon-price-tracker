@@ -31,6 +31,7 @@ const productSchema = new mongoose.Schema({
 	},
 	checkInMins: {
 		type: Number,
+		default: 1440,
 	},
 });
 

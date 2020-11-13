@@ -36,6 +36,55 @@ export const loginUser = async (obj) => {
 	return res;
 };
 
+export const addProduct = async (obj) => {
+	url = baseURL + "/addProduct";
+	res = await fetch(url, {
+		...options,
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(obj),
+	});
+	return res;
+};
+
+export const updatePrice = async (id) => {
+	url = baseURL + "/scheduledUpdate/" + id;
+	res = await fetch(url, options);
+	return res;
+};
+
+export const fetchProduct = async (id) => {
+	url = baseURL + "/product/" + id;
+	console.log(url);
+	res = await fetch(url, options);
+
+	return res;
+};
+
+export const editProduct = async (id, obj) => {
+	url = baseURL + "/editProduct/" + id;
+	res = await fetch(url, {
+		...options,
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(obj),
+	});
+	return res;
+};
+
+export const deleteProduct = async (id) => {
+	url = baseURL + "/deleteProduct/" + id;
+	res = await fetch(url, {
+		...options,
+		method: "DELETE",
+	});
+	return res;
+};
+
 export const registerUser = async (obj) => {
 	url = baseURL + "/register";
 	res = await fetch(url, {

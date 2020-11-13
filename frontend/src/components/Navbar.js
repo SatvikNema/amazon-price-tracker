@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { getUser, logoutUser } from "../utils";
 // import Modal from "./Modal";
 
 const Navbar = (props) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [username, setUsername] = useState(null);
-	const history = useHistory();
 	// const [showModal, setShowModal] = useState(false);
 	// const [modalMessage, setModalMessage] = useState("");
 

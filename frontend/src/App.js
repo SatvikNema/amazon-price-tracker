@@ -4,6 +4,8 @@ import AddProduct from "./components/AddProduct";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ShowProducts from "./components/ShowProducts";
+import EditProduct from "./components/EditProduct";
+
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
@@ -11,7 +13,7 @@ function App() {
 		<BrowserRouter>
 			<Navbar />
 			<Switch>
-				<Route exact path="/">
+				{/* <Route exact path="/">
 					<Home />
 				</Route>
 				<Route exact path="/addProduct">
@@ -26,6 +28,20 @@ function App() {
 				<Route exact path="/productList">
 					<ShowProducts />
 				</Route>
+				<Route exact path="/editProduct/:id">
+					<EditProduct />
+				</Route> */}
+				<Route exact path="/" component={Home} />
+
+				<Route exact path="/addProduct" component={AddProduct} />
+
+				<Route exact path="/login" component={Login} />
+
+				<Route exact path="/register" component={Register} />
+
+				<Route exact path="/productList" component={ShowProducts} />
+
+				<Route exact path="/editProduct/:id" component={EditProduct} />
 			</Switch>
 		</BrowserRouter>
 	);

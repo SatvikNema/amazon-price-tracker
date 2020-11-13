@@ -1,3 +1,5 @@
+const { update } = require("../models/product");
+
 const router = require("express").Router(),
 	{ fetchProductDetails } = require("./fetchProductDetails"),
 	{ isLoggedIn, checkProductOwnership } = require("./utils"),
@@ -11,7 +13,6 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 		const productPrice = details.price,
 			title = details.title;
 		const productOnwer = await User.findById(req.session.userId);
-		// console.log(details);
 		if (!productOnwer) {
 			return res
 				.status(401)
@@ -62,7 +63,7 @@ router.get("/scheduledUpdate/:id", async (req, res) => {
 					value: productPrice,
 				});
 				await product.save();
-				return res.status(200).json("Price is updated!");
+				return res.status(201).json("Price is updated!");
 			}
 			return res.status(200).json("No change in the product price");
 		} else {
@@ -83,11 +84,69 @@ router.get("/productList", isLoggedIn, async (req, res) => {
 	}
 });
 
-// router.post(
-// 	"/updateTargetPrice/:id",
-// 	checkProductOwnership,
-// 	async (req, res) => {}
-// );
+router.get("/product/:id", checkProductOwnership, async (req, res) => {
+	try {
+		const product = await Product.findById(req.params.id);
+		if (!product) {
+			throw new Error("product not found");
+		}
+		const { link, targetPrice, checkInMins } = product;
+		res.status(200).send({ link, targetPrice, checkInMins });
+	} catch (e) {
+		return res.status(406).json("Something went wrong: " + e);
+	}
+});
+
+router.post("/editProduct/:id", checkProductOwnership, async (req, res) => {
+	try {
+		const { targetPrice, link, checkInMins } = req.body;
+		const oldProduct = await Product.findById(req.params.id);
+		if (!oldProduct) {
+			return res.status(404).json("This product does not exists");
+		}
+		let updateObject = {};
+		if (targetPrice && targetPrice !== oldProduct.targetPrice) {
+			updateObject.targetPrice = targetPrice;
+		}
+		if (link && link !== oldProduct.link) {
+			updateObject.link = link;
+		}
+		if (checkInMins && checkInMins !== oldProduct.checkInMins) {
+			updateObject.checkInMins = checkInMins;
+		}
+		if (Object.keys(updateObject).length > 0) {
+			const oldProduct = await Product.findByIdAndUpdate(
+				req.params.id,
+				updateObject
+			);
+			return res.status(201).json("Product details were updated!");
+		} else {
+			return res.json("Nothing to update");
+		}
+	} catch (e) {
+		return res.status(406).json("Something went wrong: " + e);
+	}
+});
+
+router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
+	try {
+		const oldProduct = await Product.findByIdAndDelete(req.params.id);
+		const user = await User.findById(req.session.userId);
+		if (!oldProduct || !user) {
+			return res.status(404).json(e);
+		}
+		const itemIndex = user.items.indexOf(req.params.id);
+		if (itemIndex !== -1) {
+			user.items.splice(itemIndex, 1);
+		}
+		await user.save();
+		return res
+			.status(200)
+			.json("product and its other refernces were deleted!");
+	} catch (e) {
+		res.status(406).json(e);
+	}
+});
 // router.post(
 // 	"/updateCheckFrequency/:id",
 // 	checkProductOwnership,

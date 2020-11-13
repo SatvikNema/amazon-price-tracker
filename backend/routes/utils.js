@@ -13,7 +13,6 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const homeRedirect = (req, res, next) => {
-	// console.log(req.session.userId);
 	if (req.session.userId) {
 		res.status(406).json("You are already logged in!");
 	} else {
@@ -64,10 +63,13 @@ const sendHTTPRequest = (method, url, obj, isJSON) => {
 
 const checkProductOwnership = async (req, res, next) => {
 	const product = await Product.findById(req.params.id);
+	if (!product) {
+		return res.status(404).json("product does not exists");
+	}
 	if (
 		product &&
 		req.session.userId &&
-		req.session.userId === product.owner.id
+		product.owner.id.equals(req.session.userId)
 	) {
 		return next();
 	}
