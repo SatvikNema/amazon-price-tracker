@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer"),
 	Product = require("../models/product"),
+	cheerio = require("cheerio"),
 	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 const isLoggedIn = (req, res, next) => {
@@ -17,6 +18,30 @@ const homeRedirect = (req, res, next) => {
 		res.status(406).json("You are already logged in!");
 	} else {
 		next();
+	}
+};
+const updateDetail = async (product) => {
+	try {
+		const details = await fetchProductDetails(product.link);
+		const productPrice = details.price,
+			title = details.title;
+		if (typeof productPrice === "number") {
+			const prices = product.price;
+			if (productPrice !== prices[prices.length - 1].value) {
+				product.price.push({
+					value: productPrice,
+				});
+				await product.save();
+				// console.log(
+				// 	product.title + " price changed to - INR " + productPrice
+				// );
+			}
+			// console.log("No change in " + product.title);
+		} else {
+			throw "kuch jhol ho gaya bhau! for: " + product.title;
+		}
+	} catch (e) {
+		throw "error occured: " + e;
 	}
 };
 
@@ -76,10 +101,72 @@ const checkProductOwnership = async (req, res, next) => {
 	return res.status(401).json("Not allowed to access other person's product");
 };
 
+const loadHTML = async (url) => {
+	try {
+		// Sending the request to get the product page of amazon, in raw html
+		const productHtmlPage = await sendHTTPRequest(
+			(method = "GET"),
+			(url = url),
+			(obj = {}),
+			(isJSON = false)
+		);
+		const loadedHTML = cheerio.load(productHtmlPage);
+		return loadedHTML;
+	} catch (e) {
+		console.log(e);
+	}
+};
+
+const fetchProductDetails = async (url) => {
+	try {
+		// Fetching the price
+		const pageHandle = await loadHTML(url);
+		const firstPriceElement = pageHandle("#priceblock_dealprice");
+		let price = fetchNumericalPrice(firstPriceElement);
+		if (!price) {
+			const thridPriceElement = pageHandle("#priceblock_ourprice");
+			price = fetchNumericalPrice(thridPriceElement);
+		}
+		if (!price) {
+			const fourthPriceElement = pageHandle("#priceblock_saleprice");
+			price = fetchNumericalPrice(fourthPriceElement);
+		}
+		if (!price) {
+			const secondPriceElement = pageHandle(
+				"span .a-size-base.a-color-price.a-color-price"
+			);
+			price = fetchNumericalPrice(secondPriceElement);
+		}
+
+		//Fetching the title
+		const title = pageHandle("#productTitle").text().trim();
+		// console.log({
+		// 	title,
+		// 	price,
+		// });
+		return {
+			title,
+			price,
+		};
+	} catch (e) {
+		throw "Error occcured in fetchProductDeatils.js: " + e;
+		return {
+			title: "Not found",
+			price: "Not found",
+		};
+	}
+};
+
+const fetchNumericalPrice = (priceElement) => {
+	return parseInt(priceElement.text().trim().slice(2).replace(/,/g, ""));
+};
+
 module.exports = {
 	dispatchMail,
 	sendHTTPRequest,
 	isLoggedIn,
 	homeRedirect,
 	checkProductOwnership,
+	updateDetail,
+	fetchProductDetails,
 };

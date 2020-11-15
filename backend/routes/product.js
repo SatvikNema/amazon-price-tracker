@@ -1,8 +1,10 @@
-const { update } = require("../models/product");
-
 const router = require("express").Router(),
-	{ fetchProductDetails } = require("./fetchProductDetails"),
-	{ isLoggedIn, checkProductOwnership } = require("./utils"),
+	{
+		isLoggedIn,
+		checkProductOwnership,
+		updateDetail,
+		fetchProductDetails,
+	} = require("./utils"),
 	Product = require("../models/product"),
 	User = require("../models/user");
 
@@ -42,7 +44,7 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 			return res.status(404).json("Product not found");
 		}
 	} catch (e) {
-		return res.status(406).json("Something went wrong: " + e);
+		return res.status(406).json(e);
 	}
 });
 
@@ -71,6 +73,19 @@ router.get("/scheduledUpdate/:id", async (req, res) => {
 		}
 	} catch (e) {
 		return res.status(406).json("Something went wrong: " + e);
+	}
+});
+
+router.get("/updateAll/", async (req, res) => {
+	try {
+		const products = await Product.find();
+		const promisedOfUpdates = products.map(updateDetail);
+		await Promise.all(promisedOfUpdates);
+
+		console.log("challo bhai ho gaya");
+		res.json("every product was updated!");
+	} catch (e) {
+		return res.status(406).json(e);
 	}
 });
 

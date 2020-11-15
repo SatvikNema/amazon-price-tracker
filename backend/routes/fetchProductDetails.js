@@ -49,7 +49,7 @@ const fetchProductDetails = async (url) => {
 			price,
 		};
 	} catch (e) {
-		console.log(e);
+		throw "Error occcured in fetchProductDeatils.js: " + e;
 		return {
 			title: "Not found",
 			price: "Not found",
@@ -61,6 +61,6 @@ const fetchNumericalPrice = (priceElement) => {
 	return parseInt(priceElement.text().trim().slice(2).replace(/,/g, ""));
 };
 
-module.exports = {
-	fetchProductDetails,
-};
+// module.exports = {
+// 	fetchProductDetails,
+// };
