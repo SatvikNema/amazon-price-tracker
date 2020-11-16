@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer"),
 	Product = require("../models/product"),
+	User = require("../models/user"),
 	cheerio = require("cheerio"),
 	XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
@@ -32,11 +33,11 @@ const updateDetail = async (product) => {
 					value: productPrice,
 				});
 				await product.save();
-				// console.log(
-				// 	product.title + " price changed to - INR " + productPrice
-				// );
+				console.log(
+					product.title + " price changed to - INR " + productPrice
+				);
 			}
-			// console.log("No change in " + product.title);
+			console.log("No change in " + product.title);
 		} else {
 			throw "kuch jhol ho gaya bhau! for: " + product.title;
 		}
@@ -150,15 +151,28 @@ const fetchProductDetails = async (url) => {
 		};
 	} catch (e) {
 		throw "Error occcured in fetchProductDeatils.js: " + e;
-		return {
-			title: "Not found",
-			price: "Not found",
-		};
 	}
 };
 
 const fetchNumericalPrice = (priceElement) => {
 	return parseInt(priceElement.text().trim().slice(2).replace(/,/g, ""));
+};
+
+const isAdminAccount = async (req, res, next) => {
+	try {
+		if (req.session.userId) {
+			const user = await User.findById(req.session.userId);
+			if (user.username === "satvik") {
+				next();
+			} else {
+				res.status(401).json("lol no");
+			}
+		} else {
+			res.status(401).json("lol no");
+		}
+	} catch (e) {
+		console.log(e);
+	}
 };
 
 module.exports = {
@@ -169,4 +183,5 @@ module.exports = {
 	checkProductOwnership,
 	updateDetail,
 	fetchProductDetails,
+	isAdminAccount,
 };

@@ -6,6 +6,7 @@ const express = require("express"),
 	cors = require("cors"),
 	productRoutes = require("./routes/product"),
 	authRoutes = require("./routes/auth");
+cronRoute = require("./routes/cronSettings");
 
 const app = express();
 app.use(express.json());
@@ -58,6 +59,7 @@ app.use(
 
 app.use(productRoutes);
 app.use(authRoutes);
+app.use(cronRoute);
 
 app.listen(PORT, () => {
 	console.log("server started...");

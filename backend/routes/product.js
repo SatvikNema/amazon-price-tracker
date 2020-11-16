@@ -76,19 +76,6 @@ router.get("/scheduledUpdate/:id", async (req, res) => {
 	}
 });
 
-router.get("/updateAll/", async (req, res) => {
-	try {
-		const products = await Product.find();
-		const promisedOfUpdates = products.map(updateDetail);
-		await Promise.all(promisedOfUpdates);
-
-		console.log("challo bhai ho gaya");
-		res.json("every product was updated!");
-	} catch (e) {
-		return res.status(406).json(e);
-	}
-});
-
 router.get("/productList", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);
@@ -162,10 +149,16 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 		res.status(406).json(e);
 	}
 });
-// router.post(
-// 	"/updateCheckFrequency/:id",
-// 	checkProductOwnership,
-// 	async (req, res) => {}
-// );
+
+router.get("/updateAll", async (req, res) => {
+	try {
+		const products = await Product.find();
+		const promisedOfUpdates = products.map(updateDetail);
+		await Promise.all(promisedOfUpdates);
+		res.json("every product was updated!");
+	} catch (e) {
+		return res.status(406).json(e);
+	}
+});
 
 module.exports = router;
