@@ -1,0 +1,28 @@
+body {
+	background: url("http://www.wallpaperup.com/uploads/wallpapers/2012/10/21/20181/cad2441dd3252cf53f12154412286ba0.jpg");
+	padding: 50px;
+}
+
+.ip {
+	width: 20rem;
+	border: 4px double lightblue;
+}
+
+.card-img-top {
+	width: 70%;
+	height: 70%;
+	margin: auto;
+	object-fit: cover;
+}
+
+/* .card {
+	width: 350px;
+}
+.card-body {
+	width: 100%;
+	padding-right: 0px;
+}
+.card-title {
+	width: 100%;
+	padding-right: 0px;
+} */

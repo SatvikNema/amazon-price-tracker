@@ -64,6 +64,7 @@ const Navbar = (props) => {
 			if (logout.ok) {
 				setLoggedIn(false);
 				setUsername(null);
+				window.location.reload();
 			} else {
 				const response = await logout.json();
 				throw new Error(response);
@@ -75,35 +76,71 @@ const Navbar = (props) => {
 
 	return (
 		<div>
-			{loggedIn ? (
-				<ul>
-					<li>
-						<Link to="/">Home</Link>
-					</li>
-					<li>{username} is singed in</li>
-					<li>
-						<Link to="/addProduct">Add Product</Link>
-					</li>
-					<li>
-						<Link to="/productList">View product list</Link>
-					</li>
-					<li>
-						<button onClick={logoutCurrentUser}>Logout</button>
-					</li>
-				</ul>
-			) : (
-				<ul>
-					<li>
-						<Link to="/">Home</Link>
-					</li>
-					<li>
-						<Link to="/login">Login</Link>
-					</li>
-					<li>
-						<Link to="/register">Register</Link>
-					</li>
-				</ul>
-			)}
+			<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<Link class="navbar-brand" to="/">
+					Amazon Price Tracker
+				</Link>
+				<button
+					class="navbar-toggler"
+					type="button"
+					data-toggle="collapse"
+					data-target="#navbarNav"
+					aria-controls="navbarNav"
+					aria-expanded="false"
+					aria-label="Toggle navigation"
+				>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNav">
+					{loggedIn ? (
+						<ul class="navbar-nav ml-auto">
+							<li class="nav-item active">
+								<Link class="nav-link" to="/addProduct">
+									Add Product
+									<span class="sr-only">(current)</span>
+								</Link>
+							</li>
+							<li class="nav-item active">
+								<Link class="nav-link" to="/productList">
+									View product list
+									<span class="sr-only">(current)</span>
+								</Link>
+							</li>
+							<li class="nav-item active">
+								<a class="nav-link">
+									<strong>{username} is singed in</strong>
+								</a>
+							</li>
+							<li class="nav-item active">
+								<a class="nav-link">
+									<button onClick={logoutCurrentUser}>
+										Logout
+									</button>
+								</a>
+							</li>
+						</ul>
+					) : (
+						<ul class="navbar-nav ml-auto">
+							{/* <li class="nav-item active">
+								<Link class="nav-link" to="/">
+									Home<span class="sr-only">(current)</span>
+								</Link>
+							</li> */}
+							<li class="nav-item active">
+								<Link class="nav-link" to="/login">
+									Login<span class="sr-only">(current)</span>
+								</Link>
+							</li>
+							<li class="nav-item active">
+								<Link class="nav-link" to="/register">
+									Register
+									<span class="sr-only">(current)</span>
+								</Link>
+							</li>
+						</ul>
+					)}
+				</div>
+			</nav>
 			{/* {showModal && (
 				<Modal message={modalMessage} closeModal={closeModal} />
 			)} */}

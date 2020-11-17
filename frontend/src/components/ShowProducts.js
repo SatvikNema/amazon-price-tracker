@@ -69,60 +69,87 @@ const ShowProducts = (props) => {
 				<div>
 					Number of products tracking: {profile.items.length}
 					<ul>
-						{profile.items.map((item) => {
-							return (
-								<div key={item._id}>
-									<li>
-										<a href={item.link} target="_blank">
-											{item.title}
-										</a>
-										<br />
-										Price (in INR):{" "}
-										{
-											item.price[item.price.length - 1]
-												.value
-										}
-										<br />
-										You want in it: {item.targetPrice}
-										<br />
-										checking in (min): {item.checkInMins}
-										<br />
-										<button
-											onClick={() =>
-												updateStatus(item._id)
-											}
-										>
-											Update price!
-										</button>
-										<button
-											onClick={() =>
-												goToEditPage(item._id)
-											}
-										>
-											Edit
-										</button>
-										<button
-											onClick={() =>
-												deleteThisProduct(item._id)
-											}
-										>
-											Delete
-										</button>
-										<br />
-										<em>
-											(Last change in price:
-											{properDateFormat(
-												item.price[
-													item.price.length - 1
-												].date
-											)}
-											)
-										</em>
-									</li>
-									<br />
-								</div>
-							);
-						})}
+						{/* <div class="row row-cols-1 row-cols-md-3"> */}
+						<div class="card-deck row row-cols-1 row-cols-md-3">
+							{profile.items.map((item) => {
+								return (
+									<div key={item._id} class="col mb-4">
+										<div class="card mb-3 h-100">
+											<img
+												src="https://image.shutterstock.com/image-photo/white-transparent-leaf-on-mirror-260nw-1029171697.jpg"
+												class="card-img"
+												alt="..."
+											/>
+											<div class="card-body">
+												<a
+													href={item.link}
+													target="_blank"
+													class="card-link"
+												>
+													{item.title}
+												</a>
+												<br />
+												<p class="card-text">
+													Price (in INR):{" "}
+													{
+														item.price[
+															item.price.length -
+																1
+														].value
+													}
+													<br />
+													Your target:{" "}
+													{item.targetPrice}
+												</p>
+											</div>
+											<div class="card-footer">
+												<small class="text-muted">
+													<button
+														onClick={() =>
+															updateStatus(
+																item._id
+															)
+														}
+														class="btn btn-success mr-2 w-1"
+													>
+														Update price!
+													</button>
+													<button
+														onClick={() =>
+															goToEditPage(
+																item._id
+															)
+														}
+														class="btn btn-warning mr-2 w-1"
+													>
+														Edit
+													</button>
+													<button
+														onClick={() =>
+															deleteThisProduct(
+																item._id
+															)
+														}
+														class="btn btn-danger mr-2 w-1"
+													>
+														Delete
+													</button>
+													Last change in price:
+													<em>
+														{properDateFormat(
+															item.price[
+																item.price
+																	.length - 1
+															].date
+														)}
+													</em>
+												</small>
+											</div>
+										</div>
+									</div>
+								);
+							})}
+						</div>
 					</ul>
 				</div>
 			) : (
