@@ -76,8 +76,8 @@ const ShowProducts = (props) => {
 									<div key={item._id} class="col mb-4">
 										<div class="card mb-3 h-100">
 											<img
-												src="https://image.shutterstock.com/image-photo/white-transparent-leaf-on-mirror-260nw-1029171697.jpg"
-												class="card-img"
+												src={item.productImage}
+												class="card-img product-img"
 												alt="..."
 											/>
 											<div class="card-body">
