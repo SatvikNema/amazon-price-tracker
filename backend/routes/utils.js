@@ -141,13 +141,25 @@ const fetchProductDetails = async (url) => {
 
 		//Fetching the title
 		const title = pageHandle("#productTitle").text().trim();
-		// console.log({
-		// 	title,
-		// 	price,
-		// });
+
+		// fetching the image url
+		// $("#imgTagWrapperId img") || $("#img-canvas img")
+		let imageLinkHandle = pageHandle("#imgBlkFront"),
+			productImage = null;
+
+		if (imageLinkHandle.length == 0) {
+			imageLinkHandle = pageHandle("#imgTagWrapperId img");
+			productImage = imageLinkHandle.attr("data-old-hires");
+		} else {
+			const parsed = JSON.parse(
+				imageLinkHandle.attr("data-a-dynamic-image")
+			);
+			productImage = Object.keys(parsed)[0];
+		}
 		return {
 			title,
 			price,
+			productImage,
 		};
 	} catch (e) {
 		throw "Error occcured in fetchProductDeatils.js: " + e;

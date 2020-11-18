@@ -33,6 +33,10 @@ const productSchema = new mongoose.Schema({
 		type: Number,
 		default: 1440,
 	},
+	productImage: {
+		type: String,
+		default: "404Error4.png",
+	},
 });
 
 const Product = mongoose.model("Product", productSchema);

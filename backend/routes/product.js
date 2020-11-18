@@ -13,7 +13,7 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 		const { targetPrice, link, checkInMins } = req.body;
 		const details = await fetchProductDetails(link);
 		const productPrice = details.price,
-			title = details.title;
+			{ title, productImage } = details;
 		const productOnwer = await User.findById(req.session.userId);
 		if (!productOnwer) {
 			return res
@@ -35,11 +35,12 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 				],
 				targetPrice,
 				checkInMins,
+				productImage,
 			});
 			await newProduct.save();
 			productOnwer.items.push(newProduct);
 			await productOnwer.save();
-			return res.status(200).json({ title, productPrice });
+			return res.status(200).json({ title, productPrice, productImage });
 		} else {
 			return res.status(404).json("Product not found");
 		}
@@ -56,8 +57,7 @@ router.get("/scheduledUpdate/:id", async (req, res) => {
 			return res.status(404).json("The product does not exist.");
 		}
 		const details = await fetchProductDetails(product.link);
-		const productPrice = details.price,
-			title = details.title;
+		const productPrice = details.price;
 		if (typeof productPrice === "number") {
 			const prices = product.price;
 			if (productPrice !== prices[prices.length - 1].value) {
