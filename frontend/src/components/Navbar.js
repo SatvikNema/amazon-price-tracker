@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { getUser, logoutUser } from "../utils";
 // import Modal from "./Modal";
 
 const Navbar = (props) => {
 	const [loggedIn, setLoggedIn] = useState(false);
 	const [username, setUsername] = useState(null);
+	let history = useHistory();
 	// const [showModal, setShowModal] = useState(false);
 	// const [modalMessage, setModalMessage] = useState("");
 
@@ -21,6 +22,9 @@ const Navbar = (props) => {
 				setLoggedIn(true);
 				setUsername(user);
 				console.log(user);
+			} else {
+				setUsername(null);
+				setLoggedIn(false);
 			}
 		} catch (e) {
 			console.log("Erorr occured: " + e);
@@ -64,7 +68,7 @@ const Navbar = (props) => {
 			if (logout.ok) {
 				setLoggedIn(false);
 				setUsername(null);
-				window.location.reload();
+				history.push("/");
 			} else {
 				const response = await logout.json();
 				throw new Error(response);

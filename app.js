@@ -25,7 +25,7 @@ app.use(
 		credentials: true,
 	})
 );
-mongoose.connect(MONGODB_CONNECTION_URI_ATLAS, {
+mongoose.connect(MONGODB_CONNECTION_URI_LOCAL, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,

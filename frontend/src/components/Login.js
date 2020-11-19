@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { loginUser, getUser } from "../utils";
 
 const Login = (props) => {
@@ -31,6 +31,8 @@ const Login = (props) => {
 			const user = await getUser();
 			if (user) {
 				setLoggedIn(true);
+			} else {
+				setLoggedIn(false);
 			}
 		} catch (e) {
 			console.log("Erorr occured: " + e);
@@ -46,9 +48,9 @@ const Login = (props) => {
 			{loggedIn ? (
 				<div>
 					Your are now logged in.{" "}
-					<a href="http://localhost:3000/home">
+					<Link to="/">
 						<button>Go to home page</button>
-					</a>
+					</Link>
 				</div>
 			) : (
 				<div>
