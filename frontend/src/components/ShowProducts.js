@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 const ShowProducts = (props) => {
 	const [profile, setProfile] = useState();
 	const [loading, setLoading] = useState(true);
-	const load = false,
+	let load = false,
 		history = useHistory();
 
 	const fetchProducts = async () => {
@@ -55,9 +55,10 @@ const ShowProducts = (props) => {
 		const res = await deleteProduct(id);
 		const response = await res.json();
 		console.log(response);
-		if (res.ok) {
-			props.history.go(0);
-		}
+		// if (res.ok) {
+		// 	props.history.go(0);
+		// }
+		await fetchProducts();
 	};
 
 	return (
@@ -67,14 +68,21 @@ const ShowProducts = (props) => {
 				<h3>Loading...</h3>
 			) : loading === false ? (
 				<div>
-					Number of products tracking: {profile.items.length}
+					<p id="num-products">
+						Number of products tracking: {profile.items.length}
+					</p>
+
 					<ul>
 						{/* <div class="row row-cols-1 row-cols-md-3"> */}
-						<div class="card-deck row row-cols-1 row-cols-md-3">
+						{/* <div class="card-deck row row-cols-1 row-cols-md-3"> */}
+						<div class="row">
 							{profile.items.map((item) => {
 								return (
-									<div key={item._id} class="col mb-4">
-										<div class="card mb-3 h-100">
+									<div
+										key={item._id}
+										class="col-sm-6 col-md-4 col-lg-4 mb-4"
+									>
+										<div class="card h-100">
 											<img
 												src={item.productImage}
 												class="card-img product-img"
@@ -134,6 +142,7 @@ const ShowProducts = (props) => {
 													>
 														Delete
 													</button>
+													<br />
 													Last change in price:
 													<em>
 														{properDateFormat(

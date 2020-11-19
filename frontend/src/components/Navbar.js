@@ -141,6 +141,7 @@ const Navbar = (props) => {
 					)}
 				</div>
 			</nav>
+			<br />
 			{/* {showModal && (
 				<Modal message={modalMessage} closeModal={closeModal} />
 			)} */}

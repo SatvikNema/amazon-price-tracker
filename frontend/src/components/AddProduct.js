@@ -38,34 +38,44 @@ const AddProduct = (props) => {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<label htmlFor="link">Amazon product link: </label>
-				<input
-					type="text"
-					name="link"
-					id="link"
-					onChange={(e) => setLink(e.target.value)}
-					value={link}
-				/>
-				<br />
-				<label htmlFor="target">Target price: </label>
-				<input
-					type="number"
-					name="targetPrice"
-					id="target"
-					onChange={(e) => setPrice(e.target.value)}
-					value={price}
-				/>
-				<br />
-				<label htmlFor="check">Check in (mins): </label>
-				<input
-					type="number"
-					name="checkIn"
-					id="check"
-					onChange={(e) => setCheckIn(e.target.value)}
-					value={checkIn}
-				/>
-				<br />
-				<button type="submit">Submit</button>
+				<div class="form-group">
+					<label htmlFor="link">Amazon product link: </label>
+					<input
+						type="text"
+						name="link"
+						id="link"
+						onChange={(e) => setLink(e.target.value)}
+						value={link}
+						class="from-control ip"
+					/>
+				</div>
+				<div class="form-group">
+					<label htmlFor="target">Target price: </label>
+					<input
+						type="number"
+						name="targetPrice"
+						id="target"
+						onChange={(e) => setPrice(e.target.value)}
+						value={price}
+						class="from-control ip"
+					/>
+				</div>
+				<div class="form-group">
+					<label htmlFor="check">Check in (mins): </label>
+					<input
+						type="number"
+						name="checkIn"
+						id="check"
+						onChange={(e) => setCheckIn(e.target.value)}
+						value={checkIn}
+						class="from-control ip"
+					/>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-success btn-sm">
+						Submit
+					</button>
+				</div>
 			</form>
 		</div>
 	);

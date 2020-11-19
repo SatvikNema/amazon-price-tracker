@@ -150,12 +150,18 @@ const fetchProductDetails = async (url) => {
 		if (imageLinkHandle.length == 0) {
 			imageLinkHandle = pageHandle("#imgTagWrapperId img");
 			productImage = imageLinkHandle.attr("data-old-hires");
+		}
+		if (imageLinkHandle.length == 0) {
+			imageLinkHandle = pageHandle("#landingImage");
+			productImage = imageLinkHandle.attr("data-old-hires");
 		} else {
 			const parsed = JSON.parse(
 				imageLinkHandle.attr("data-a-dynamic-image")
 			);
+
 			productImage = Object.keys(parsed)[0];
 		}
+
 		return {
 			title,
 			price,

@@ -8,14 +8,31 @@ body {
 	border: 4px double lightblue;
 }
 
-.card-img-top {
+/* .card-img-top {
 	width: 70%;
 	height: 70%;
 	margin: auto;
 	object-fit: cover;
-}
+} */
 
 .product-img {
 	max-height: 200px;
 	object-fit: scale-down;
+}
+
+h1 {
+	color: yellow;
+	/* background-color: rgb(28, 104, 219, 0.3);
+	border: 1px solid white; */
+	width: 70%;
+}
+
+#num-products {
+	font-size: larger;
+	color: rgb(255, 255, 150);
+	font-weight: bold;
+}
+
+label {
+	font-weight: bold;
 }
