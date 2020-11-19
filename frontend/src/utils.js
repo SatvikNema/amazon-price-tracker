@@ -1,19 +1,20 @@
-const baseURL = "http://localhost:5000";
-let options = {
-	credentials: "include",
-};
+// let options = {
+// 	credentials: "include",
+// };
+let options = {};
 let url = null,
 	res = null,
 	response = null;
 
 export const getProductList = async () => {
-	url = baseURL + "/productList";
+	url = "/productList";
+
 	res = await fetch(url, options);
 	return res;
 };
 
 export const getUser = async () => {
-	url = baseURL + "/getUser";
+	url = "/getUser";
 	res = await fetch(url, options);
 	if (res.ok) {
 		response = await res.json();
@@ -24,7 +25,8 @@ export const getUser = async () => {
 };
 
 export const loginUser = async (obj) => {
-	url = baseURL + "/login";
+	url = "/login";
+	console.log("url: ====>" + url);
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -37,7 +39,7 @@ export const loginUser = async (obj) => {
 };
 
 export const addProduct = async (obj) => {
-	url = baseURL + "/addProduct";
+	url = "/addProduct";
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -50,13 +52,13 @@ export const addProduct = async (obj) => {
 };
 
 export const updatePrice = async (id) => {
-	url = baseURL + "/scheduledUpdate/" + id;
+	url = "/scheduledUpdate/" + id;
 	res = await fetch(url, options);
 	return res;
 };
 
 export const fetchProduct = async (id) => {
-	url = baseURL + "/product/" + id;
+	url = "/product/" + id;
 	console.log(url);
 	res = await fetch(url, options);
 
@@ -64,7 +66,7 @@ export const fetchProduct = async (id) => {
 };
 
 export const editProduct = async (id, obj) => {
-	url = baseURL + "/editProduct/" + id;
+	url = "/editProduct/" + id;
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -77,7 +79,7 @@ export const editProduct = async (id, obj) => {
 };
 
 export const deleteProduct = async (id) => {
-	url = baseURL + "/deleteProduct/" + id;
+	url = "/deleteProduct/" + id;
 	res = await fetch(url, {
 		...options,
 		method: "DELETE",
@@ -86,7 +88,7 @@ export const deleteProduct = async (id) => {
 };
 
 export const registerUser = async (obj) => {
-	url = baseURL + "/register";
+	url = "/register";
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -99,7 +101,7 @@ export const registerUser = async (obj) => {
 };
 
 export const logoutUser = async () => {
-	url = baseURL + "/logout";
+	url = "/logout";
 	res = await fetch(url, options);
 	return res;
 };

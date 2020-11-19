@@ -4,11 +4,12 @@
 	"description": "A app which tracks product price in amaozon, and sends you an email if the price drops below your specified limit",
 	"main": "index.js",
 	"scripts": {
+		"client-install": "npm install --prefix frontend",
 		"start": "node ./app.js",
 		"server": "nodemon app.js",
 		"client": "npm start --prefix frontend",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
-		"client-install": "npm install --prefix frontend"
+		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
 	},
 	"author": "Satvik Nema",
 	"license": "ISC",

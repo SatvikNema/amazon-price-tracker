@@ -118,7 +118,7 @@ const ShowProducts = (props) => {
 																item._id
 															)
 														}
-														class="btn btn-success mr-2 w-1"
+														class="btn btn-success mr-2 mb-2"
 													>
 														Update price!
 													</button>
@@ -128,7 +128,7 @@ const ShowProducts = (props) => {
 																item._id
 															)
 														}
-														class="btn btn-warning mr-2 w-1"
+														class="btn btn-warning mr-2 mb-2"
 													>
 														Edit
 													</button>
@@ -138,7 +138,7 @@ const ShowProducts = (props) => {
 																item._id
 															)
 														}
-														class="btn btn-danger mr-2 w-1"
+														class="btn btn-danger mr-2 mb-2"
 													>
 														Delete
 													</button>

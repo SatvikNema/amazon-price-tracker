@@ -4,6 +4,7 @@ const express = require("express"),
 	mongoose = require("mongoose"),
 	MongoStore = require("connect-mongo")(session),
 	cors = require("cors"),
+	path = require("path"),
 	productRoutes = require("./routes/product"),
 	authRoutes = require("./routes/auth");
 cronRoute = require("./routes/cronSettings");
@@ -15,16 +16,16 @@ const {
 	SESSION_SECRET,
 	PORT = 5000,
 	MONGODB_CONNECTION_URI_LOCAL,
+	MONGODB_CONNECTION_URI_ATLAS,
 	FRONTEND_URL,
 } = process.env;
 
 app.use(
 	cors({
-		origin: FRONTEND_URL,
 		credentials: true,
 	})
 );
-mongoose.connect(MONGODB_CONNECTION_URI_LOCAL, {
+mongoose.connect(MONGODB_CONNECTION_URI_ATLAS, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -60,6 +61,16 @@ app.use(
 app.use(productRoutes);
 app.use(authRoutes);
 app.use(cronRoute);
+
+// Serve static assets (if in production)
+if (process.env.NODE_ENV == "production") {
+	app.use(express.static("frontend/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(
+			path.resolve(__dirname, "frontend", "build", "index.html")
+		);
+	});
+}
 
 app.listen(PORT, () => {
 	console.log("server started...");
