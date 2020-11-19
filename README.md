@@ -1,5 +1,5 @@
 # Amazon Price Tracker
-A web application to track the prices of you favourite products (from amazon).
+A web application to track the prices of your favourite products (from amazon).
  - Built using MongoDB (Atlas), Expressjs, React js, Nodejs
  - Web scraping using cheerio
  - Session management using express-session with mongo store.
