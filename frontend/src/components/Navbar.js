@@ -21,7 +21,6 @@ const Navbar = (props) => {
 			if (user) {
 				setLoggedIn(true);
 				setUsername(user);
-				console.log(user);
 			} else {
 				setUsername(null);
 				setLoggedIn(false);
@@ -31,7 +30,6 @@ const Navbar = (props) => {
 		}
 	};
 	useEffect(() => {
-		console.log("effect");
 		fetchUser();
 
 		// Method 2

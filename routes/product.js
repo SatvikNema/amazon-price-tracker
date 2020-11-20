@@ -80,6 +80,7 @@ router.get("/productList", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);
 		const userWithProducts = await user.populate("items").execPopulate();
+		// console.log(userWithProducts.items.length);
 		res.status(200).json(userWithProducts);
 	} catch (e) {
 		return res.status(406).json("Something went wrong: " + e);

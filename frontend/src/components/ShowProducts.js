@@ -1,45 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { getProductList, updatePrice, deleteProduct } from "../utils";
-import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { getProfile, deleteProduct } from "../actions/productActions";
+import PropTypes from "prop-types";
 
 const ShowProducts = (props) => {
-	const [profile, setProfile] = useState();
-	const [loading, setLoading] = useState(true);
-	let load = false,
-		history = useHistory();
-
-	const fetchProducts = async () => {
-		try {
-			setLoading(true);
-			const res = await getProductList();
-			const response = await res.json();
-			if (res.ok) {
-				setProfile(response);
-				setLoading(false);
-			} else {
-				throw new Error(response);
-			}
-		} catch (e) {
-			setLoading(null);
-			console.log("Error occured: " + e);
-		}
-	};
-
 	useEffect(() => {
-		console.log("effect!");
-		fetchProducts();
-	}, [load]);
-
+		console.log("effect!!!!!!!!!");
+		props.getProfile();
+		console.log(props.profile);
+	}, []);
 	const updateStatus = async (id) => {
-		try {
-			const res = await (await updatePrice(id)).json();
-			console.log(res);
-			if (res.status === 201) {
-				history.go(0);
-			}
-		} catch (e) {
-			console.log("Erorr coccured: " + e);
-		}
+		console.log("Clicked on update");
+		// try {
+		// 	const res = await (await updatePrice(id)).json();
+		// 	console.log(res);
+		// 	if (res.status === 201) {
+		// 		history.go(0);
+		// 	}
+		// } catch (e) {
+		// 	console.log("Erorr coccured: " + e);
+		// }
 	};
 
 	const properDateFormat = (s) => {
@@ -48,35 +28,37 @@ const ShowProducts = (props) => {
 	};
 
 	const goToEditPage = (id) => {
-		history.push("/editProduct/" + id);
+		console.log("Clicked on edit");
+		// history.push("/editProduct/" + id);
 	};
 
 	const deleteThisProduct = async (id) => {
-		const res = await deleteProduct(id);
-		const response = await res.json();
-		console.log(response);
-		// if (res.ok) {
-		// 	props.history.go(0);
-		// }
-		await fetchProducts();
+		console.log("Clicked on delete " + id);
+		props.deleteProduct(id);
+		console.log(props.profile.profile);
+		// const res = await deleteProduct(id);
+		// const response = await res.json();
+		// await fetchProducts();
 	};
-
+	const printShit = () => {
+		console.log("hooray");
+		console.log(props.profile.profile.items);
+		return <h1>haalao</h1>;
+	};
 	return (
 		<div>
-			<h1>View all your products here!</h1>
-			{loading === true ? (
-				<h3>Loading...</h3>
-			) : loading === false ? (
+			{props.profile.loading || !props.profile.profile.items ? (
+				<h1>Data is loading...</h1>
+			) : (
 				<div>
 					<p id="num-products">
-						Number of products tracking: {profile.items.length}
+						Number of products tracking:
+						{props.profile.profile.items.length}, owned by:
+						{props.profile.profile.username}
 					</p>
-
 					<ul>
-						{/* <div class="row row-cols-1 row-cols-md-3"> */}
-						{/* <div class="card-deck row row-cols-1 row-cols-md-3"> */}
 						<div class="row">
-							{profile.items.map((item) => {
+							{props.profile.profile.items.map((item) => {
 								return (
 									<div
 										key={item._id}
@@ -161,11 +143,22 @@ const ShowProducts = (props) => {
 						</div>
 					</ul>
 				</div>
-			) : (
-				<h1>Chalbe login kar pehele</h1>
 			)}
 		</div>
 	);
 };
 
-export default ShowProducts;
+ShowProducts.prototype = {
+	getProfile: PropTypes.func.isRequired,
+	profile: PropTypes.object.isRequired,
+	loading: PropTypes.bool,
+};
+
+const mapStateToProps = (state) => ({
+	profile: state.profile,
+	loading: state.loading,
+});
+
+export default connect(mapStateToProps, { getProfile, deleteProduct })(
+	ShowProducts
+);
