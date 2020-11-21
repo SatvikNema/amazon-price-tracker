@@ -21,8 +21,14 @@ const EditProduct = (props) => {
 		}
 	};
 	useEffect(() => {
-		fetchProductWrappper(props.match.params.id);
-	}, [props.match.params.id]);
+		const temp = async () => {
+			await fetchProductWrappper(props.match.params.id);
+			if (props.status === "finished") {
+				props.history.push("/productlist");
+			}
+		};
+		temp();
+	}, [props.status]);
 
 	const handleSubmit = async (e) => {
 		try {
@@ -33,7 +39,6 @@ const EditProduct = (props) => {
 				checkInMins: checkIn,
 			};
 			props.editThisProduct(props.match.params.id, obj);
-			if (!props.loading) props.history.push("/productList");
 		} catch (e) {
 			console.log(e);
 		}
@@ -87,11 +92,11 @@ const EditProduct = (props) => {
 
 EditProduct.prototype = {
 	editThisProduct: PropTypes.func.isRequired,
-	loading: PropTypes.bool,
+	status: PropTypes.string,
 };
 
 const mapToStateProps = (state) => ({
-	loading: state.profile.loading,
+	status: state.profile.status,
 });
 
 export default connect(mapToStateProps, { editThisProduct })(EditProduct);

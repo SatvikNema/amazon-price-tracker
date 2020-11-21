@@ -1,24 +1,22 @@
-import React, { useState } from "react";
-import { addProduct } from "../utils";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import { addThisProduct } from "../actions/productActions";
+import PropTypes from "prop-types";
 
 const AddProduct = (props) => {
 	const [link, setLink] = useState("");
 	const [price, setPrice] = useState("");
 	const [checkIn, setCheckIn] = useState("");
 
+	// useEffect(() => {
+	// 	if (props.status === "finished") {
+	// 		props.history.push("/productList");
+	// 	}
+	// }, [props.status]);
+
 	const handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			//remove the gibberish from link - handle afterwards
-			// let slash_dp_index = link.indexOf("/dp/");
-			// if (slash_dp_index === -1) {
-			// 	throw new Error("Link not valid");
-			// }
-			// let lastRequiredIndex = link.indexOf("/", slash_dp_index + 4);
-			// let finalLink =
-			// 	lastRequiredIndex === -1
-			// 		? link
-			// 		: link.slice(0, lastRequiredIndex);
 			let finalLink = link;
 			console.log(price, finalLink, checkIn);
 			const obj = {
@@ -26,10 +24,10 @@ const AddProduct = (props) => {
 				targetPrice: price,
 				checkInMins: checkIn,
 			};
-			const res = await addProduct(obj);
-			const response = await res.json();
-			console.log(response);
-			props.history.push("/productList");
+			setLink("");
+			setPrice("");
+			setCheckIn("");
+			props.addThisProduct(obj);
 		} catch (e) {
 			console.log("Error occured: " + e);
 		}
@@ -37,6 +35,8 @@ const AddProduct = (props) => {
 
 	return (
 		<div>
+			{props.status === "start" && <h1>Adding the product</h1>}
+			{props.status === "finished" && <h1>Added!</h1>}
 			<form onSubmit={handleSubmit}>
 				<div class="form-group">
 					<label htmlFor="link">Amazon product link: </label>
@@ -81,4 +81,13 @@ const AddProduct = (props) => {
 	);
 };
 
-export default AddProduct;
+AddProduct.prototype = {
+	addThisProduct: PropTypes.func.isRequired,
+	status: PropTypes.string,
+};
+
+const mapStateToProps = (state) => ({
+	status: state.profile.status,
+});
+
+export default connect(mapStateToProps, { addThisProduct })(AddProduct);

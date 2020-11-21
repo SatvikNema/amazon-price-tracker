@@ -10,18 +10,10 @@ import PropTypes from "prop-types";
 const ShowProducts = (props) => {
 	useEffect(() => {
 		props.getProfile();
+		// console.log(props);
 	}, []);
 	const updateStatus = async (id) => {
 		props.updateCurrentPrice(id);
-		// try {
-		// 	const res = await (await updatePrice(id)).json();
-		// 	console.log(res);
-		// 	if (res.status === 201) {
-		// 		history.go(0);
-		// 	}
-		// } catch (e) {
-		// 	console.log("Erorr coccured: " + e);
-		// }
 	};
 
 	const properDateFormat = (s) => {
@@ -43,7 +35,9 @@ const ShowProducts = (props) => {
 	};
 	return (
 		<div>
-			{props.singleLoading && <h1>Price is updating....</h1>}
+			{props.status === "start" && <h1>Price is updating....</h1>}
+			{props.status === "finished" && <h1>No change in price</h1>}
+
 			{props.loading || !props.profile.profile.items ? (
 				<h1>Data is loading...</h1>
 			) : (
@@ -151,13 +145,13 @@ ShowProducts.prototype = {
 	deleteThisProduct: PropTypes.func.isRequired,
 	profile: PropTypes.object.isRequired,
 	loading: PropTypes.bool,
-	singleLoading: PropTypes.bool,
+	status: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
 	profile: state.profile,
 	loading: state.profile.loading,
-	singleLoading: state.profile.singleLoading,
+	status: state.profile.status,
 });
 
 export default connect(mapStateToProps, {

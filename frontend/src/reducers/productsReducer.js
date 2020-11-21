@@ -1,14 +1,16 @@
 import {
 	GET_PROFILE,
 	UPDATE_PRODUCT,
-	DELETE_PRODUCT,
 	ITEMS_LOADING,
 	SINGLE_ITEM_LOADING,
+	START_REQUEST,
+	END_REQUEST,
 } from "../actions/types";
 const initialState = {
 	profile: {},
 	loading: false,
 	singleLoading: false,
+	status: null,
 };
 
 export default function changeState(state = initialState, action) {
@@ -19,31 +21,34 @@ export default function changeState(state = initialState, action) {
 				profile: action.payload,
 				loading: false,
 				singleLoading: false,
-			};
-		case DELETE_PRODUCT:
-			return {
-				profile: {
-					...state.profile,
-					items: state.profile.items.filter(
-						(item) => item._id !== action.payload
-					),
-				},
+				status: null,
 			};
 		case UPDATE_PRODUCT:
 			return {
 				...state,
-				loading: false,
-				singleLoading: false,
+				status: null,
 			};
 		case ITEMS_LOADING:
 			return {
 				...state,
 				loading: true,
+				status: null,
 			};
 		case SINGLE_ITEM_LOADING:
 			return {
 				...state,
 				singleLoading: true,
+				status: null,
+			};
+		case START_REQUEST:
+			return {
+				...state,
+				status: "start",
+			};
+		case END_REQUEST:
+			return {
+				...state,
+				status: "finished",
 			};
 		default:
 			return state;
