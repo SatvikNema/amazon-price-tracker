@@ -65,7 +65,11 @@ router.get("/scheduledUpdate/:id", async (req, res) => {
 					value: productPrice,
 				});
 				await product.save();
-				return res.status(201).json("Price is updated!");
+				const user = await User.findById(req.session.userId);
+				const userWithProducts = await user
+					.populate("items")
+					.execPopulate();
+				return res.status(201).json(userWithProducts);
 			}
 			return res.status(200).json("No change in the product price");
 		} else {
@@ -143,9 +147,9 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 			user.items.splice(itemIndex, 1);
 		}
 		await user.save();
-		return res
-			.status(200)
-			.json("product and its other refernces were deleted!");
+		const userWithProducts = await user.populate("items").execPopulate();
+
+		return res.status(200).json(userWithProducts);
 	} catch (e) {
 		res.status(406).json(e);
 	}

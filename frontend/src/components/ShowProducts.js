@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getProfile, deleteProduct } from "../actions/productActions";
+import {
+	getProfile,
+	deleteThisProduct,
+	updateCurrentPrice,
+} from "../actions/productActions";
 import PropTypes from "prop-types";
 
 const ShowProducts = (props) => {
 	useEffect(() => {
-		console.log("effect!!!!!!!!!");
 		props.getProfile();
-		console.log(props.profile);
 	}, []);
 	const updateStatus = async (id) => {
-		console.log("Clicked on update");
+		props.updateCurrentPrice(id);
 		// try {
 		// 	const res = await (await updatePrice(id)).json();
 		// 	console.log(res);
@@ -28,17 +30,11 @@ const ShowProducts = (props) => {
 	};
 
 	const goToEditPage = (id) => {
-		console.log("Clicked on edit");
-		// history.push("/editProduct/" + id);
+		props.history.push("/editProduct/" + id);
 	};
 
 	const deleteThisProduct = async (id) => {
-		console.log("Clicked on delete " + id);
-		props.deleteProduct(id);
-		console.log(props.profile.profile);
-		// const res = await deleteProduct(id);
-		// const response = await res.json();
-		// await fetchProducts();
+		props.deleteThisProduct(id);
 	};
 	const printShit = () => {
 		console.log("hooray");
@@ -47,7 +43,8 @@ const ShowProducts = (props) => {
 	};
 	return (
 		<div>
-			{props.profile.loading || !props.profile.profile.items ? (
+			{props.singleLoading && <h1>Price is updating....</h1>}
+			{props.loading || !props.profile.profile.items ? (
 				<h1>Data is loading...</h1>
 			) : (
 				<div>
@@ -150,15 +147,21 @@ const ShowProducts = (props) => {
 
 ShowProducts.prototype = {
 	getProfile: PropTypes.func.isRequired,
+	updateCurrentPrice: PropTypes.func.isRequired,
+	deleteThisProduct: PropTypes.func.isRequired,
 	profile: PropTypes.object.isRequired,
 	loading: PropTypes.bool,
+	singleLoading: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
 	profile: state.profile,
-	loading: state.loading,
+	loading: state.profile.loading,
+	singleLoading: state.profile.singleLoading,
 });
 
-export default connect(mapStateToProps, { getProfile, deleteProduct })(
-	ShowProducts
-);
+export default connect(mapStateToProps, {
+	getProfile,
+	deleteThisProduct,
+	updateCurrentPrice,
+})(ShowProducts);
