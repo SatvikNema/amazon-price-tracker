@@ -152,13 +152,19 @@ const fetchProductDetails = async (url) => {
 			productImage = imageLinkHandle.attr("data-old-hires");
 		}
 		if (imageLinkHandle.length == 0) {
+			imageLinkHandle = pageHandle("#ebooksImgBlkFront");
+			const parsed = JSON.parse(
+				imageLinkHandle.attr("data-a-dynamic-image")
+			);
+			productImage = Object.keys(parsed)[0];
+		}
+		if (imageLinkHandle.length == 0) {
 			imageLinkHandle = pageHandle("#landingImage");
 			productImage = imageLinkHandle.attr("data-old-hires");
 		} else {
 			const parsed = JSON.parse(
 				imageLinkHandle.attr("data-a-dynamic-image")
 			);
-
 			productImage = Object.keys(parsed)[0];
 		}
 
