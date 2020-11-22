@@ -4,4 +4,5 @@ A web application to track the prices of your favourite products (from amazon).
  - Web scraping using cheerio
  - Session management using express-session with mongo store.
 
-This is the second version. Introducing redux for easier state management
+This is the second version. Introducing redux for easier state management.
+Deployed to https://amazon-product-tracker.herokuapp.com/
