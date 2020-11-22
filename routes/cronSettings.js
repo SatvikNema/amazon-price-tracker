@@ -4,13 +4,10 @@ const router = require("express").Router(),
 	{ isAdminAccount } = require("./utils"),
 	updateURL = process.env.baseURL + "/updateAll";
 
-// const cronTimeString = "0 0 */1 * *",
-const cronTimeString = "*/20 * * * * *",
+const cronTimeString = "0 0 */1 * *",
+	// const cronTimeString = "*/20 * * * * *",
 	onTick = () => {
-		fetch(updateURL)
-			.then((res) => res.json())
-			.then((response) => console.log(response))
-			.catch((e) => console.log(e));
+		fetch(updateURL).catch((e) => console.log(e));
 		// console.log("hello");
 	},
 	onComplete = null,
