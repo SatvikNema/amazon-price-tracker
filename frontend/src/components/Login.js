@@ -1,98 +1,93 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, Link } from "react-router-dom";
-import { loginUser, getUser } from "../utils";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { loginThisUser, getThisUser } from "../actions/authActions";
 
 const Login = (props) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const [loggedIn, setLoggedIn] = useState(false);
-	let history = useHistory();
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const obj = {
 			username,
 			password,
 		};
-		try {
-			const loginStatus = await loginUser(obj);
-			if (loginStatus.ok) {
-				history.go(0);
-			} else {
-				const response = await loginStatus.json();
-				throw new Error(response);
-			}
-		} catch (e) {
-			console.log("Error occured: " + e);
-		}
-	};
-
-	const fetchUser = async () => {
-		try {
-			const user = await getUser();
-			if (user) {
-				setLoggedIn(true);
-			} else {
-				setLoggedIn(false);
-			}
-		} catch (e) {
-			console.log("Erorr occured: " + e);
-		}
+		props.loginThisUser(obj);
 	};
 
 	useEffect(() => {
-		fetchUser();
+		props.getThisUser();
 	}, []);
 
 	return (
 		<div>
-			{loggedIn ? (
-				<div>
-					Your are now logged in.{" "}
-					<Link to="/">
-						<button>Go to home page</button>
-					</Link>
-				</div>
+			{props.errStatus && <h1>{props.errMsg}</h1>}
+			{props.isLoading ? (
+				<h1>Getting the user...</h1>
 			) : (
 				<div>
-					<h1>Login page</h1>
-					<form method="post">
-						<div class="form-group">
-							<label htmlFor="UN">Username: </label>
-							<input
-								type="text"
-								value={username}
-								onChange={(e) => setUsername(e.target.value)}
-								name="username"
-								id="UN"
-								class="form-control ip"
-							/>
-						</div>
-						<div class="form-group">
-							<label htmlFor="PW">Password: </label>
-							<input
-								type="password"
-								value={password}
-								onChange={(e) => setPassword(e.target.value)}
-								name="password"
-								id="PW"
-								class="form-control ip"
-							/>
-						</div>
+					{props.isAuthenticated ? (
 						<div>
-							<button
-								// class="form-control"
-								type="submit"
-								onClick={handleSubmit}
-								class="btn btn-sm btn-primary"
-							>
-								Submit
-							</button>
+							Your are now logged in.{" "}
+							<Link to="/">
+								<button>Go to home page</button>
+							</Link>
 						</div>
-					</form>
+					) : (
+						<div>
+							<h1>Login page</h1>
+							<form method="post">
+								<div class="form-group">
+									<label htmlFor="UN">Username: </label>
+									<input
+										type="text"
+										value={username}
+										onChange={(e) =>
+											setUsername(e.target.value)
+										}
+										name="username"
+										id="UN"
+										class="form-control ip"
+									/>
+								</div>
+								<div class="form-group">
+									<label htmlFor="PW">Password: </label>
+									<input
+										type="password"
+										value={password}
+										onChange={(e) =>
+											setPassword(e.target.value)
+										}
+										name="password"
+										id="PW"
+										class="form-control ip"
+									/>
+								</div>
+								<div>
+									<button
+										// class="form-control"
+										type="submit"
+										onClick={handleSubmit}
+										class="btn btn-sm btn-primary"
+									>
+										Submit
+									</button>
+								</div>
+							</form>
+						</div>
+					)}
 				</div>
 			)}
 		</div>
 	);
 };
 
-export default Login;
+const mapStateToProps = (state) => ({
+	isAuthenticated: state.auth.isAuthenticated,
+	isLoading: state.auth.isLoading,
+	errMsg: state.error.msg,
+	errStatus: state.error.status,
+});
+
+export default connect(mapStateToProps, { loginThisUser, getThisUser })(Login);
