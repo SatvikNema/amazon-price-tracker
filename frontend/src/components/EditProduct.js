@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { fetchProduct, editProduct } from "../utils";
+import { fetchProduct } from "../utils";
+import { connect } from "react-redux";
+import { editThisProduct } from "../actions/productActions";
+import PropTypes from "prop-types";
 
 const EditProduct = (props) => {
 	const [localLink, setLocalLink] = useState("");
@@ -9,7 +12,6 @@ const EditProduct = (props) => {
 	const fetchProductWrappper = async (id) => {
 		try {
 			const response = await (await fetchProduct(id)).json();
-			console.log(response);
 			const { link, targetPrice, checkInMins } = response;
 			setLocalLink(link);
 			setPrice(targetPrice);
@@ -19,8 +21,14 @@ const EditProduct = (props) => {
 		}
 	};
 	useEffect(() => {
-		fetchProductWrappper(props.match.params.id);
-	}, [props.match.params.id]);
+		const temp = async () => {
+			await fetchProductWrappper(props.match.params.id);
+			if (props.status === "finished") {
+				props.history.push("/productlist");
+			}
+		};
+		temp();
+	}, [props.status]);
 
 	const handleSubmit = async (e) => {
 		try {
@@ -30,10 +38,7 @@ const EditProduct = (props) => {
 				targetPrice: price,
 				checkInMins: checkIn,
 			};
-			const res = await editProduct(props.match.params.id, obj);
-			const response = await res.json();
-			console.log(response);
-			props.history.push("/productList");
+			props.editThisProduct(props.match.params.id, obj);
 		} catch (e) {
 			console.log(e);
 		}
@@ -85,4 +90,13 @@ const EditProduct = (props) => {
 	);
 };
 
-export default EditProduct;
+EditProduct.prototype = {
+	editThisProduct: PropTypes.func.isRequired,
+	status: PropTypes.string,
+};
+
+const mapToStateProps = (state) => ({
+	status: state.profile.status,
+});
+
+export default connect(mapToStateProps, { editThisProduct })(EditProduct);
