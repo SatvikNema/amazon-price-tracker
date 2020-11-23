@@ -4,6 +4,7 @@ const productSchema = new mongoose.Schema({
 	owner: {
 		id: mongoose.Schema.Types.ObjectId,
 		username: String,
+		email: String,
 	},
 	link: {
 		type: String,

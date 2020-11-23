@@ -3,11 +3,22 @@ const router = require("express").Router(),
 	User = require("../models/user"),
 	{ homeRedirect, isLoggedIn } = require("./utils");
 
+const validateEmail = (email) => {
+	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+	return re.test(email);
+};
+
 router.post("/register", homeRedirect, async (req, res) => {
 	try {
-		const { username, password } = req.body;
+		const { username, password, email } = req.body;
+		if (!username || !password || !email) {
+			return res.status(401).json({ err: "All fields are compulsory" });
+		}
+		if (!validateEmail(email)) {
+			return res.status(401).json({ err: "Email invalid" });
+		}
 		const user = await User.findOne({
-			username,
+			$or: [{ username }, { email }],
 		});
 		if (user) {
 			return res.status(404).json({ err: "This user already exists" });
@@ -16,6 +27,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			const newUser = new User({
 				username,
 				password: hashedPassword,
+				email,
 				items: [],
 			});
 			req.session.userId = newUser._id;
@@ -23,7 +35,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			return res.status(201).json({ msg: "Registered!", username });
 		}
 	} catch (e) {
-		res.status(406).json("Something went wrong: " + e);
+		res.status(406).json({ err: e.message });
 	}
 });
 
@@ -48,7 +60,7 @@ router.post("/login", homeRedirect, async (req, res) => {
 			}
 		}
 	} catch (e) {
-		res.status(406).json("Something went wrong: " + e);
+		res.status(406).json({ err: e.message });
 	}
 });
 
@@ -61,6 +73,27 @@ router.get("/getUser", async (req, res) => {
 		}
 	} else {
 		return res.status(404).json({ username: null });
+	}
+});
+
+router.get("/stopGettingEmails", isLoggedIn, async (req, res) => {
+	try {
+		const user = await User.findById(req.session.userId);
+		user.recieveEmails = false;
+		await user.save();
+		res.status(200).json({ msg: "unsubsribed from the emailing service" });
+	} catch (e) {
+		return res.status(406).json({ err: e.message });
+	}
+});
+router.get("/startGettingEmails", isLoggedIn, async (req, res) => {
+	try {
+		const user = await User.findById(req.session.userId);
+		user.recieveEmails = true;
+		await user.save();
+		res.status(200).json({ msg: "subsribed the emailing service" });
+	} catch (e) {
+		return res.status(406).json({ err: e.message });
 	}
 });
 

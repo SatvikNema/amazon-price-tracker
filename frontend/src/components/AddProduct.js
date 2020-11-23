@@ -7,36 +7,57 @@ const AddProduct = (props) => {
 	const [link, setLink] = useState("");
 	const [price, setPrice] = useState("");
 	const [checkIn, setCheckIn] = useState("");
+	const [validInput, setValidInput] = useState(true);
 
-	// useEffect(() => {
-	// 	if (props.status === "finished") {
-	// 		props.history.push("/productList");
-	// 	}
-	// }, [props.status]);
+	const removeGibberish = (link) => {
+		let refIndex = link.indexOf("/ref");
+		if (refIndex == -1) {
+			let questionIndex = link.indexOf("?");
+			if (questionIndex == -1) {
+				return link;
+			}
+			return link.slice(0, questionIndex);
+		}
+		return link.slice(0, refIndex);
+	};
+
+	const isUrl = (s) => {
+		var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+		return regexp.test(s);
+	};
 
 	const handleSubmit = async (e) => {
 		try {
 			e.preventDefault();
-			let finalLink = link;
-			console.log(price, finalLink, checkIn);
-			const obj = {
-				link: finalLink,
-				targetPrice: price,
-				checkInMins: checkIn,
-			};
-			setLink("");
-			setPrice("");
-			setCheckIn("");
-			props.addThisProduct(obj);
+			let finalLink = null;
+			if (link && price && checkIn && isUrl(link)) {
+				//clean the link
+				finalLink = removeGibberish(link);
+				setValidInput(true);
+				const obj = {
+					link: finalLink,
+					targetPrice: price,
+					checkInMins: checkIn,
+				};
+				setLink("");
+				setPrice("");
+				setCheckIn("");
+				props.addThisProduct(obj);
+			} else {
+				throw new Error("input me locha");
+			}
 		} catch (e) {
 			console.log("Error occured: " + e);
+			setValidInput(false);
 		}
 	};
 
 	return (
 		<div>
+			{!validInput && <h1>The link should be a proper URL</h1>}
 			{props.status === "start" && <h1>Adding the product</h1>}
-			{props.status === "finished" && <h1>Added!</h1>}
+			{props.status === "finished" &&
+				(props.errStatus ? <h1>{props.errMsg}</h1> : <h1>Added!</h1>)}
 			<form onSubmit={handleSubmit}>
 				<div class="form-group">
 					<label htmlFor="link">Amazon product link: </label>
@@ -47,6 +68,7 @@ const AddProduct = (props) => {
 						onChange={(e) => setLink(e.target.value)}
 						value={link}
 						class="from-control ip"
+						required
 					/>
 				</div>
 				<div class="form-group">
@@ -58,6 +80,7 @@ const AddProduct = (props) => {
 						onChange={(e) => setPrice(e.target.value)}
 						value={price}
 						class="from-control ip"
+						required
 					/>
 				</div>
 				<div class="form-group">
@@ -69,6 +92,7 @@ const AddProduct = (props) => {
 						onChange={(e) => setCheckIn(e.target.value)}
 						value={checkIn}
 						class="from-control ip"
+						required
 					/>
 				</div>
 				<div class="form-group">
@@ -88,6 +112,8 @@ AddProduct.prototype = {
 
 const mapStateToProps = (state) => ({
 	status: state.profile.status,
+	errMsg: state.error.msg,
+	errStatus: state.error.status,
 });
 
 export default connect(mapStateToProps, { addThisProduct })(AddProduct);

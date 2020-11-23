@@ -33,17 +33,59 @@ const updateDetail = async (product) => {
 					value: productPrice,
 				});
 				await product.save();
-				console.log(
-					product.title + " price changed to - INR " + productPrice
-				);
+				// console.log(
+				// 	product.title + " price changed to - INR " + productPrice
+				// );
+				if (productPrice < product.targetPrice) {
+					// send email notification to associated user
+					sendNotificationEmail(
+						product.owner.email,
+						title,
+						productPrice,
+						product.targetPrice
+					);
+				}
+			} else {
+				// console.log("No change in " + product.title);
 			}
-			console.log("No change in " + product.title);
 		} else {
 			throw "kuch jhol ho gaya bhau! for: " + product.title;
 		}
+		sendNotificationEmail(
+			product.owner.email,
+			title,
+			productPrice,
+			product.targetPrice
+		);
 	} catch (e) {
 		throw "error occured: " + e;
 	}
+};
+
+const sendNotificationEmail = (
+	recipientEmail,
+	title,
+	currentPrice,
+	targetPrice
+) => {
+	let transporter = {
+		service: "gmail",
+		auth: {
+			user: process.env.SENDER_USERNAME,
+			pass: process.env.PASSWORD,
+		},
+	};
+
+	let mailOptions = {
+		from: process.env.SENDER_USERNAME,
+		to: recipientEmail,
+		subject: "Notification: Amazon product price drop",
+		html: `The price of <em>${title}</em> dropped to: <strong><em>INR ${currentPrice}</em></strong>.<br/> 
+			Get it before it gets out of stock :).
+			<hr>
+			Delete this product from your profile to stop getting repeated emails. Thank you`,
+	};
+	dispatchMail(transporter, mailOptions);
 };
 
 const dispatchMail = (transporterDetails, mailOptions) => {
@@ -167,6 +209,12 @@ const fetchProductDetails = async (url) => {
 			);
 			productImage = Object.keys(parsed)[0];
 		}
+
+		// console.log({
+		// 	title,
+		// 	price,
+		// 	productImage,
+		// });
 
 		return {
 			title,

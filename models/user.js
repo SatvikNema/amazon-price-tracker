@@ -9,12 +9,23 @@ const userSchema = new mongoose.Schema({
 	password: {
 		type: String,
 	},
+	email: {
+		type: String,
+		trim: true,
+		lowercase: true,
+		unique: true,
+		required: "Email address is required",
+	},
 	items: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "Product",
 		},
 	],
+	recieveEmails: {
+		type: Boolean,
+		default: true,
+	},
 });
 
 const User = mongoose.model("User", userSchema);

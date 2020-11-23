@@ -6,8 +6,8 @@ const express = require("express"),
 	cors = require("cors"),
 	path = require("path"),
 	productRoutes = require("./routes/product"),
-	authRoutes = require("./routes/auth");
-cronRoute = require("./routes/cronSettings");
+	authRoutes = require("./routes/auth"),
+	cronRoute = require("./routes/cronSettings");
 
 const app = express();
 app.use(express.json());
@@ -26,7 +26,7 @@ app.use(
 	})
 );
 
-mongoose.connect(MONGODB_CONNECTION_URI_ATLAS, {
+mongoose.connect(MONGODB_CONNECTION_URI_LOCAL, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,

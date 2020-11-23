@@ -12,8 +12,12 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 	try {
 		const { targetPrice, link, checkInMins } = req.body;
 		const details = await fetchProductDetails(link);
+
 		const productPrice = details.price,
 			{ title, productImage } = details;
+		if (productPrice < targetPrice) {
+			throw new Error("Product price already less than target price");
+		}
 		const productOnwer = await User.findById(req.session.userId);
 		if (!productOnwer) {
 			return res
@@ -25,6 +29,7 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 				owner: {
 					id: productOnwer._id,
 					username: productOnwer.username,
+					email: productOnwer.email,
 				},
 				link,
 				title,
@@ -45,7 +50,7 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 			return res.status(404).json("Product not found");
 		}
 	} catch (e) {
-		return res.status(406).json(e);
+		return res.status(406).json({ err: e.message });
 	}
 });
 
@@ -160,7 +165,7 @@ router.get("/updateAll", async (req, res) => {
 		const products = await Product.find();
 		const promisedOfUpdates = products.map(updateDetail);
 		await Promise.all(promisedOfUpdates);
-		res.json("every product was updated!");
+		res.json({ success: "every product was updated!" });
 	} catch (e) {
 		return res.status(406).json(e);
 	}

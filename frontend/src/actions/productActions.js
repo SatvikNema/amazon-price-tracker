@@ -15,6 +15,8 @@ import {
 	addProduct,
 } from "../utils";
 
+import { returnErrors } from "./errorActions";
+
 // For scenrios where async actions are required, 3 main states used: start, running, finished
 
 export const getProfile = () => (dispatch) => {
@@ -94,17 +96,19 @@ export const addThisProduct = (obj) => (dispatch) => {
 		type: START_REQUEST,
 	});
 	addProduct(obj)
-		.then((res) => {
-			if (res.ok) return res.json();
-			else throw "Unable to add product";
-		})
+		.then((res) => res.json())
 		.then((response) => {
-			//dispatch an action
+			if (response.err) {
+				throw response;
+			}
 			return dispatch({
 				type: END_REQUEST,
 			});
 		})
-		.catch((e) => console.log(e));
+		.catch((e) => {
+			dispatch(endRequest());
+			return dispatch(returnErrors(e.err, 406));
+		});
 };
 
 export const setItemsLoading = () => {
