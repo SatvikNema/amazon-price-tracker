@@ -28,11 +28,14 @@ h1 {
 }
 
 #num-products {
-	font-size: larger;
-	color: rgb(255, 255, 150);
+	color: rgb(0, 0, 0);
 	font-weight: bold;
 }
 
 label {
 	font-weight: bold;
+}
+
+.email-notification {
+	color: white;
 }

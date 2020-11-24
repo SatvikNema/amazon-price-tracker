@@ -91,7 +91,7 @@ router.get("/startGettingEmails", isLoggedIn, async (req, res) => {
 		const user = await User.findById(req.session.userId);
 		user.recieveEmails = true;
 		await user.save();
-		res.status(200).json({ msg: "subsribed the emailing service" });
+		res.status(200).json({ msg: "subsribed to the emailing service" });
 	} catch (e) {
 		return res.status(406).json({ err: e.message });
 	}

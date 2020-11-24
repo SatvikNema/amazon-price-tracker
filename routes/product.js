@@ -114,7 +114,9 @@ router.post("/editProduct/:id", checkProductOwnership, async (req, res) => {
 		const { targetPrice, link, checkInMins } = req.body;
 		const oldProduct = await Product.findById(req.params.id);
 		if (!oldProduct) {
-			return res.status(404).json("This product does not exists");
+			return res
+				.status(404)
+				.json({ err: "This product does not exists" });
 		}
 		let updateObject = {};
 		if (targetPrice && targetPrice !== oldProduct.targetPrice) {
@@ -136,7 +138,7 @@ router.post("/editProduct/:id", checkProductOwnership, async (req, res) => {
 			return res.json("Nothing to update");
 		}
 	} catch (e) {
-		return res.status(406).json("Something went wrong: " + e);
+		return res.status(406).json({ err: e });
 	}
 });
 
@@ -156,7 +158,7 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 
 		return res.status(200).json(userWithProducts);
 	} catch (e) {
-		res.status(406).json(e);
+		res.status(406).json({ err: e.message });
 	}
 });
 

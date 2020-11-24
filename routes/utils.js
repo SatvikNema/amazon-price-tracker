@@ -26,6 +26,7 @@ const updateDetail = async (product) => {
 		const details = await fetchProductDetails(product.link);
 		const productPrice = details.price,
 			title = details.title;
+		const owner = await User.findById(product.owner.id);
 		if (typeof productPrice === "number") {
 			const prices = product.price;
 			if (productPrice !== prices[prices.length - 1].value) {
@@ -36,10 +37,10 @@ const updateDetail = async (product) => {
 				// console.log(
 				// 	product.title + " price changed to - INR " + productPrice
 				// );
-				if (productPrice < product.targetPrice) {
+				if (owner.recieveEmail && productPrice < product.targetPrice) {
 					// send email notification to associated user
 					sendNotificationEmail(
-						product.owner.email,
+						owner.email,
 						title,
 						productPrice,
 						product.targetPrice
@@ -51,12 +52,6 @@ const updateDetail = async (product) => {
 		} else {
 			throw "kuch jhol ho gaya bhau! for: " + product.title;
 		}
-		sendNotificationEmail(
-			product.owner.email,
-			title,
-			productPrice,
-			product.targetPrice
-		);
 	} catch (e) {
 		throw "error occured: " + e;
 	}

@@ -6,13 +6,26 @@ import { getThisUser, registerThisUser } from "../actions/authActions";
 const Register = (props) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [email, setEmail] = useState("");
+	const [inputError, setInputError] = useState(null);
+
 	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const obj = {
-			username,
-			password,
-		};
-		props.registerThisUser(obj);
+		setInputError(null);
+		try {
+			e.preventDefault();
+			if (username && email && password) {
+				const obj = {
+					username,
+					password,
+					email,
+				};
+				props.registerThisUser(obj);
+			} else {
+				throw new Error("All fields are compulsory");
+			}
+		} catch (e) {
+			setInputError(e.message);
+		}
 	};
 
 	useEffect(() => {
@@ -21,7 +34,11 @@ const Register = (props) => {
 
 	return (
 		<div>
-			{props.errStatus && <h1>{props.errMsg}</h1>}
+			{inputError ? (
+				<h1>{inputError}</h1>
+			) : (
+				props.errStatus && <h1>{props.errMsg}</h1>
+			)}
 			{props.isLoading ? (
 				<h1>Getting the user...</h1>
 			) : (
@@ -48,6 +65,22 @@ const Register = (props) => {
 										name="username"
 										id="UN"
 										class="form-control ip"
+										required
+									/>
+								</div>
+								<div class="form-group">
+									<label htmlFor="EMAIL">Email: </label>
+									<input
+										type="email"
+										value={email}
+										required
+										onChange={(e) =>
+											setEmail(e.target.value)
+										}
+										name="email"
+										id="EMAIL"
+										class="form-control ip"
+										required
 									/>
 								</div>
 								<div class="form-group">
@@ -61,6 +94,7 @@ const Register = (props) => {
 										name="password"
 										id="PW"
 										class="form-control ip"
+										required
 									/>
 								</div>
 								<div class="form-group">

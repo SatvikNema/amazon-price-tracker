@@ -5,6 +5,8 @@ import {
 	SINGLE_ITEM_LOADING,
 	START_REQUEST,
 	END_REQUEST,
+	EMAIL_NOTIFICATION_ON,
+	EMAIL_NOTIFICATION_OFF,
 } from "../actions/types";
 const initialState = {
 	profile: {},

@@ -4,13 +4,14 @@ import {
 	getProfile,
 	deleteThisProduct,
 	updateCurrentPrice,
+	startEmailNotification,
+	stopEmailNotification,
 } from "../actions/productActions";
 import PropTypes from "prop-types";
 
 const ShowProducts = (props) => {
 	useEffect(() => {
 		props.getProfile();
-		// console.log(props);
 	}, []);
 	const updateStatus = async (id) => {
 		props.updateCurrentPrice(id);
@@ -38,10 +39,37 @@ const ShowProducts = (props) => {
 						<h1>Data is loading...</h1>
 					) : (
 						<div>
-							<p id="num-products">
+							<h2 id="num-products">
 								Number of products tracking:
-								{props.profile.profile.items.length}
-							</p>
+								{" " + props.profile.profile.items.length}
+							</h2>
+							<p>All prices are updated everyday at 6 am IST</p>
+							{props.profile.profile.recieveEmails ? (
+								<p class="email-notification">
+									<strong>
+										Email notifications for the same are on.
+									</strong>
+									<button
+										class="btn btn-sm btn-danger ml-2"
+										onClick={props.stopEmailNotification}
+									>
+										Turn off
+									</button>
+								</p>
+							) : (
+								<p class="email-notification">
+									<strong>
+										Email notifications for the same are
+										off.
+									</strong>
+									<button
+										class="btn btn-sm btn-success ml-2"
+										onClick={props.startEmailNotification}
+									>
+										Turn on
+									</button>
+								</p>
+							)}
 							<ul>
 								<div class="row">
 									{props.profile.profile.items.map((item) => {
@@ -146,6 +174,8 @@ ShowProducts.prototype = {
 	getProfile: PropTypes.func.isRequired,
 	updateCurrentPrice: PropTypes.func.isRequired,
 	deleteThisProduct: PropTypes.func.isRequired,
+	startEmailNotification: PropTypes.func.isRequired,
+	stopEmailNotification: PropTypes.func.isRequired,
 	profile: PropTypes.object.isRequired,
 	loading: PropTypes.bool,
 	status: PropTypes.string,
@@ -162,4 +192,6 @@ export default connect(mapStateToProps, {
 	getProfile,
 	deleteThisProduct,
 	updateCurrentPrice,
+	startEmailNotification,
+	stopEmailNotification,
 })(ShowProducts);

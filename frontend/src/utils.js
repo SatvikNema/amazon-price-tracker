@@ -45,7 +45,6 @@ export const updatePrice = async (id) => {
 
 export const fetchProduct = async (id) => {
 	url = "/product/" + id;
-	console.log(url);
 	res = await fetch(url, options);
 
 	return res;
@@ -61,6 +60,15 @@ export const editProduct = async (id, obj) => {
 		},
 		body: JSON.stringify(obj),
 	});
+	return res;
+};
+
+export const emailOn = async () => {
+	res = await fetch("/startGettingEmails");
+	return res;
+};
+export const emailOff = async () => {
+	res = await fetch("/stopGettingEmails");
 	return res;
 };
 
