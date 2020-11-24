@@ -47,3 +47,13 @@ label {
 	padding-bottom: 1px;
 	/* width: 75%; */
 }
+.footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	color: white;
+	text-align: center;
+	width: 100%;
+	font-weight: 400;
+	font-size: larger;
+}

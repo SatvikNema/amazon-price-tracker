@@ -32,6 +32,11 @@ function App() {
 						component={EditProduct}
 					/>
 				</Switch>
+				<div class="footer">
+					<a href="https://github.com/SatvikNema/amazon-price-tracker">
+						<p>View source on githuhb</p>
+					</a>
+				</div>
 			</BrowserRouter>
 		</Provider>
 	);
