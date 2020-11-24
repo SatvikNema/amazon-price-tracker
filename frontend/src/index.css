@@ -37,5 +37,13 @@ label {
 }
 
 .email-notification {
-	color: white;
+	color: rgb(0, 0, 0);
+}
+
+.header-info {
+	/* border: 3px solid red; */
+	background-color: rgb(255, 255, 255, 0.4);
+	margin-bottom: 5px;
+	padding-bottom: 1px;
+	/* width: 75%; */
 }

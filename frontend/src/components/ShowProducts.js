@@ -39,37 +39,44 @@ const ShowProducts = (props) => {
 						<h1>Data is loading...</h1>
 					) : (
 						<div>
-							<h2 id="num-products">
-								Number of products tracking:
-								{" " + props.profile.profile.items.length}
-							</h2>
-							<p>All prices are updated everyday at 6 am IST</p>
-							{props.profile.profile.recieveEmails ? (
-								<p class="email-notification">
+							<div class="header-info">
+								<h2 id="num-products">
+									Number of products tracking:
+									{" " + props.profile.profile.items.length}
+								</h2>
+								<p>
 									<strong>
-										Email notifications for the same are on.
+										All prices are updated everyday at 6 am
+										IST
 									</strong>
-									<button
-										class="btn btn-sm btn-danger ml-2"
-										onClick={props.stopEmailNotification}
-									>
-										Turn off
-									</button>
 								</p>
-							) : (
-								<p class="email-notification">
-									<strong>
+								{props.profile.profile.recieveEmails ? (
+									<p class="email-notification">
+										Email notifications for the same are on.
+										<button
+											class="btn btn-sm btn-danger ml-2"
+											onClick={
+												props.stopEmailNotification
+											}
+										>
+											Turn off
+										</button>
+									</p>
+								) : (
+									<p class="email-notification">
 										Email notifications for the same are
 										off.
-									</strong>
-									<button
-										class="btn btn-sm btn-success ml-2"
-										onClick={props.startEmailNotification}
-									>
-										Turn on
-									</button>
-								</p>
-							)}
+										<button
+											class="btn btn-sm btn-success ml-2"
+											onClick={
+												props.startEmailNotification
+											}
+										>
+											Turn on
+										</button>
+									</p>
+								)}
+							</div>
 							<ul>
 								<div class="row">
 									{props.profile.profile.items.map((item) => {
