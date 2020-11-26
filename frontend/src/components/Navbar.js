@@ -46,7 +46,7 @@ const Navbar = (props) => {
 							</li>
 							<li class="nav-item active">
 								<a class="nav-link">
-									<strong>{props.user} is singed in</strong>
+									<strong>{props.user} is signed in</strong>
 								</a>
 							</li>
 							<li class="nav-item active">
