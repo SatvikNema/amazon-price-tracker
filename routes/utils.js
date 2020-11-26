@@ -37,17 +37,16 @@ const updateDetail = async (product) => {
 				// console.log(
 				// 	product.title + " price changed to - INR " + productPrice
 				// );
-				if (owner.recieveEmail && productPrice < product.targetPrice) {
-					// send email notification to associated user
-					sendNotificationEmail(
-						owner.email,
-						title,
-						productPrice,
-						product.targetPrice
-					);
-				}
-			} else {
-				// console.log("No change in " + product.title);
+			}
+			if (owner.recieveEmails && productPrice < product.targetPrice) {
+				// send email notification to associated user
+				sendNotificationEmail(
+					owner.email,
+					title,
+					productPrice,
+					product.targetPrice
+				);
+				// console.log("email sent");
 			}
 		} else {
 			throw "kuch jhol ho gaya bhau! for: " + product.title;
@@ -70,6 +69,9 @@ const sendNotificationEmail = (
 			pass: process.env.PASSWORD,
 		},
 	};
+
+	// console.log(transporter);
+	// console.log(recipientEmail);
 
 	let mailOptions = {
 		from: process.env.SENDER_USERNAME,

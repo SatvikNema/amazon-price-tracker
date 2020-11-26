@@ -6,10 +6,10 @@ const router = require("express").Router(),
 const domain = null;
 let updateJob = null;
 const cronTimeString = "0 6 */1 * *",
-	// const cronTimeString = "*/20 * * * * *",
 	onComplete = null,
 	start = false,
 	timeZone = "Asia/Kolkata";
+// const cronTimeString = "*/20 * * * * *",
 
 async function onTick() {
 	try {
@@ -24,10 +24,9 @@ async function onTick() {
 
 router.get("/startUpdateJob", isAdminAccount, async (req, res) => {
 	try {
-		const onTickWithRes = onTick.bind({ res });
 		updateJob = new cronJob({
 			cronTime: cronTimeString,
-			onTick: onTickWithRes,
+			onTick: onTick,
 			onComplete: onComplete,
 			start: start,
 			timeZome: timeZone,
