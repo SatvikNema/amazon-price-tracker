@@ -1,16 +1,16 @@
 const router = require("express").Router(),
 	cronJob = require("cron").CronJob,
-	fetch = require("node-fetch"),
 	Product = require("../models/product"),
-	{ isAdminAccount, updateDetail } = require("./utils");
-const domain = null;
-let updateJob = null;
+	{ updateDetail } = require("../utils/notifications"),
+	{ isAdminAccount } = require("../middleware/checkUserMiddleware");
+
 const cronTimeString = "0 6 */1 * *",
 	onComplete = null,
 	start = false,
 	timeZone = "Asia/Kolkata";
 // const cronTimeString = "*/20 * * * * *",
 
+let updateJob = null;
 async function onTick() {
 	try {
 		const products = await Product.find();

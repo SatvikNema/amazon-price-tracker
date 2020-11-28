@@ -1,10 +1,11 @@
 const router = require("express").Router(),
+	{ updateDetail } = require("../utils/notifications"),
+	{ fetchProductDetails } = require("../utils/fetchProductDetails"),
+	{ isLoggedIn } = require("../middleware/authMiddelware"),
 	{
-		isLoggedIn,
 		checkProductOwnership,
-		updateDetail,
-		fetchProductDetails,
-	} = require("./utils"),
+		isAdminAccount,
+	} = require("../middleware/checkUserMiddleware"),
 	Product = require("../models/product"),
 	User = require("../models/user");
 
@@ -162,7 +163,7 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 	}
 });
 
-router.get("/updateAll", async (req, res) => {
+router.get("/updateAll", isAdminAccount, async (req, res) => {
 	try {
 		const products = await Product.find();
 		const promisedOfUpdates = products.map(updateDetail);
