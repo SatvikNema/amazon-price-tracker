@@ -34,7 +34,7 @@ function App() {
 				</Switch>
 				<div class="footer">
 					<a href="https://github.com/SatvikNema/amazon-price-tracker">
-						<p>View source on githuhb</p>
+						<p>View source on GitHub</p>
 					</a>
 				</div>
 			</BrowserRouter>

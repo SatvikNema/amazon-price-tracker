@@ -1,7 +1,7 @@
 const router = require("express").Router(),
 	bcrypt = require("bcrypt"),
 	User = require("../models/user"),
-	{ homeRedirect, isLoggedIn } = require("./utils");
+	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware");
 
 const validateEmail = (email) => {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;

@@ -1,12 +1,9 @@
 import {
 	GET_PROFILE,
-	UPDATE_PRODUCT,
 	ITEMS_LOADING,
 	SINGLE_ITEM_LOADING,
 	START_REQUEST,
 	END_REQUEST,
-	EMAIL_NOTIFICATION_ON,
-	EMAIL_NOTIFICATION_OFF,
 } from "./types";
 
 import {
@@ -106,11 +103,11 @@ export const updateCurrentPrice = (id) => (dispatch) => {
 			} else if (res.status === 200) {
 				return dispatch(endRequest());
 			} else {
-				throw "Error in updating";
+				throw new Error("Error in updating");
 			}
 		})
 		.catch((e) => {
-			console.log(e);
+			console.log(e.message);
 			return dispatch(endRequest());
 		});
 };
