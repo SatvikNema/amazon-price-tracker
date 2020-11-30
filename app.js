@@ -54,11 +54,11 @@ app.use(
 );
 
 // Session debugging
-app.use((req, res, next) => {
-	console.log(req.session);
-	console.log("---------------------------");
-	next();
-});
+// app.use((req, res, next) => {
+// 	console.log(req.session);
+// 	console.log("---------------------------");
+// 	next();
+// });
 
 app.use(productRoutes);
 app.use(localAuthRoutes);

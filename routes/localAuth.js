@@ -47,6 +47,10 @@ router.post("/login", homeRedirect, async (req, res) => {
 		});
 		if (!user) {
 			return res.status(404).json({ err: "This user does not exist" });
+		} else if (user.googleUser) {
+			return res.status(401).json({
+				err: "This user has an account through google sing in",
+			});
 		} else {
 			const matched = await bcrypt.compare(password, user.password);
 			if (matched) {
@@ -67,8 +71,13 @@ router.post("/login", homeRedirect, async (req, res) => {
 router.get("/getUser", async (req, res) => {
 	if (req.session.userId) {
 		const user = await User.findById(req.session.userId);
-		if (user) return res.json({ username: user.username });
-		else {
+		if (user) {
+			if (user.googleUser) {
+				return res.json({ username: user.googleUserName });
+			} else {
+				return res.json({ username: user.username });
+			}
+		} else {
 			return res.status(404).json({ username: null });
 		}
 	} else {
