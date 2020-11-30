@@ -6,7 +6,8 @@ const express = require("express"),
 	cors = require("cors"),
 	path = require("path"),
 	productRoutes = require("./routes/product"),
-	authRoutes = require("./routes/auth"),
+	localAuthRoutes = require("./routes/localAuth"),
+	googleAuthRoutes = require("./routes/googleAuth"),
 	cronRoute = require("./routes/cronSettings");
 
 const app = express();
@@ -53,14 +54,15 @@ app.use(
 );
 
 // Session debugging
-// app.use((req, res, next) => {
-// 	console.log(req.session);
-// 	console.log("---------------------------");
-// 	next();
-// });
+app.use((req, res, next) => {
+	console.log(req.session);
+	console.log("---------------------------");
+	next();
+});
 
 app.use(productRoutes);
-app.use(authRoutes);
+app.use(localAuthRoutes);
+app.use(googleAuthRoutes);
 app.use(cronRoute);
 
 // Serve static assets (if in production)
