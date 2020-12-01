@@ -14,12 +14,12 @@ const Navbar = (props) => {
 
 	return (
 		<div>
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<Link class="navbar-brand" to="/">
+			<nav className="navbar navbar-expand-lg navbar-light bg-light">
+				<Link className="navbar-brand" to="/">
 					Amazon Price Tracker
 				</Link>
 				<button
-					class="navbar-toggler"
+					className="navbar-toggler"
 					type="button"
 					data-toggle="collapse"
 					data-target="#navbarNav"
@@ -27,30 +27,30 @@ const Navbar = (props) => {
 					aria-expanded="false"
 					aria-label="Toggle navigation"
 				>
-					<span class="navbar-toggler-icon"></span>
+					<span className="navbar-toggler-icon"></span>
 				</button>
-				<div class="collapse navbar-collapse mt-0" id="navbarNav">
+				<div className="collapse navbar-collapse mt-0" id="navbarNav">
 					{props.isAuthenticated ? (
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item active">
-								<Link class="nav-link" to="/addProduct">
+						<ul className="navbar-nav ml-auto">
+							<li className="nav-item active">
+								<Link className="nav-link" to="/addProduct">
 									Add Product
-									<span class="sr-only">(current)</span>
+									<span className="sr-only">(current)</span>
 								</Link>
 							</li>
-							<li class="nav-item active">
-								<Link class="nav-link" to="/productList">
+							<li className="nav-item active">
+								<Link className="nav-link" to="/productList">
 									View product list
-									<span class="sr-only">(current)</span>
+									<span className="sr-only">(current)</span>
 								</Link>
 							</li>
-							<li class="nav-item active">
-								<a class="nav-link">
+							<li className="nav-item active">
+								<a className="nav-link">
 									<strong>{props.user} is singed in</strong>
 								</a>
 							</li>
-							<li class="nav-item active">
-								<a class="nav-link">
+							<li className="nav-item active">
+								<a className="nav-link">
 									<button onClick={logoutCurrentUser}>
 										Logout
 									</button>
@@ -58,16 +58,17 @@ const Navbar = (props) => {
 							</li>
 						</ul>
 					) : (
-						<ul class="navbar-nav ml-auto">
-							<li class="nav-item active">
-								<Link class="nav-link" to="/login">
-									Login<span class="sr-only">(current)</span>
+						<ul className="navbar-nav ml-auto">
+							<li className="nav-item active">
+								<Link className="nav-link" to="/login">
+									Login
+									<span className="sr-only">(current)</span>
 								</Link>
 							</li>
-							<li class="nav-item active">
-								<Link class="nav-link" to="/register">
+							<li className="nav-item active">
+								<Link className="nav-link" to="/register">
 									Register
-									<span class="sr-only">(current)</span>
+									<span className="sr-only">(current)</span>
 								</Link>
 							</li>
 						</ul>

@@ -106,6 +106,18 @@ export const loginUser = async (obj) => {
 	return res;
 };
 
+export const sendAccessToken = async (token) => {
+	const res = await fetch("/useAccessToken", {
+		...options,
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ access_token: token }),
+	});
+	return res;
+};
+
 export const logoutUser = async () => {
 	url = "/logout";
 	res = await fetch(url, options);

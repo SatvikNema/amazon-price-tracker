@@ -59,7 +59,7 @@ const AddProduct = (props) => {
 			{props.status === "finished" &&
 				(props.errStatus ? <h1>{props.errMsg}</h1> : <h1>Added!</h1>)}
 			<form onSubmit={handleSubmit}>
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="link">Amazon product link: </label>
 					<input
 						type="text"
@@ -67,11 +67,11 @@ const AddProduct = (props) => {
 						id="link"
 						onChange={(e) => setLink(e.target.value)}
 						value={link}
-						class="from-control ip"
+						className="from-control ip"
 						required
 					/>
 				</div>
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="target">Target price: </label>
 					<input
 						type="number"
@@ -79,11 +79,11 @@ const AddProduct = (props) => {
 						id="target"
 						onChange={(e) => setPrice(e.target.value)}
 						value={price}
-						class="from-control ip"
+						className="from-control ip"
 						required
 					/>
 				</div>
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="check">Check in (mins): </label>
 					<input
 						type="number"
@@ -91,12 +91,12 @@ const AddProduct = (props) => {
 						id="check"
 						onChange={(e) => setCheckIn(e.target.value)}
 						value={checkIn}
-						class="from-control ip"
+						className="from-control ip"
 						required
 					/>
 				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-success btn-sm">
+				<div className="form-group">
+					<button type="submit" className="btn btn-success btn-sm">
 						Submit
 					</button>
 				</div>

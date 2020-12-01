@@ -7,12 +7,15 @@ import {
 	LOGOUT_SUCCESS,
 	REGISTER_SUCCESS,
 	REGISTER_FAIL,
+	GOOGLE_SIGN_IN_SUCCESS,
+	GOOGLE_SIGN_IN_FAIL,
 } from "../actions/types";
 
 const initialState = {
 	isAuthenticated: null,
 	isLoading: false,
 	user: null,
+	googleAuthURL: null,
 };
 
 export default function (state = initialState, action) {
@@ -33,6 +36,7 @@ export default function (state = initialState, action) {
 			};
 		case LOGIN_SUCCESS:
 		case REGISTER_SUCCESS:
+		case GOOGLE_SIGN_IN_SUCCESS:
 			return {
 				...state,
 				isAuthenticated: true,
@@ -43,9 +47,9 @@ export default function (state = initialState, action) {
 		case LOGIN_FAIL:
 		case LOGOUT_SUCCESS:
 		case REGISTER_FAIL:
+		case GOOGLE_SIGN_IN_FAIL:
 			return {
 				...state,
-				token: null,
 				user: null,
 				isAuthenticated: false,
 				isLoading: false,

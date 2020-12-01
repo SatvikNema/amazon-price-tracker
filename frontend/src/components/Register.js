@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { getThisUser, registerThisUser } from "../actions/authActions";
+import {
+	getThisUser,
+	registerThisUser,
+	googleSignIn,
+} from "../actions/authActions";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const Register = (props) => {
 	const [username, setUsername] = useState("");
@@ -32,6 +37,10 @@ const Register = (props) => {
 		props.getThisUser();
 	}, []);
 
+	const googleResponse = (response) => {
+		props.googleSignIn(response.accessToken);
+	};
+
 	return (
 		<div>
 			{inputError ? (
@@ -47,14 +56,16 @@ const Register = (props) => {
 						<div>
 							Your are now logged in.{" "}
 							<Link to="/">
-								<button>Go to home page</button>
+								<button className="btn btn-xl btn-success">
+									Go to home page
+								</button>
 							</Link>
 						</div>
 					) : (
 						<div>
 							<h1>Register page</h1>
 							<form method="post">
-								<div class="form-group">
+								<div className="form-group">
 									<label htmlFor="UN">Username: </label>
 									<input
 										type="text"
@@ -64,11 +75,11 @@ const Register = (props) => {
 										}
 										name="username"
 										id="UN"
-										class="form-control ip"
+										className="form-control ip"
 										required
 									/>
 								</div>
-								<div class="form-group">
+								<div className="form-group">
 									<label htmlFor="EMAIL">Email: </label>
 									<input
 										type="email"
@@ -79,11 +90,11 @@ const Register = (props) => {
 										}
 										name="email"
 										id="EMAIL"
-										class="form-control ip"
+										className="form-control ip"
 										required
 									/>
 								</div>
-								<div class="form-group">
+								<div className="form-group">
 									<label htmlFor="PW">Password: </label>
 									<input
 										type="password"
@@ -93,20 +104,23 @@ const Register = (props) => {
 										}
 										name="password"
 										id="PW"
-										class="form-control ip"
+										className="form-control ip"
 										required
 									/>
 								</div>
-								<div class="form-group">
+								<div className="form-group">
 									<button
 										type="submit"
 										onClick={handleSubmit}
-										class="btn btn-sm btn-primary"
+										className="btn btn-sm btn-primary"
 									>
 										Submit
 									</button>
 								</div>
 							</form>
+							<h4>OR</h4>
+							{/* Add google sign in button */}
+							<GoogleSignInButton onSuccess={googleResponse} />
 						</div>
 					)}
 				</div>
@@ -120,8 +134,11 @@ const mapStateToProps = (state) => ({
 	isLoading: state.auth.isLoading,
 	errMsg: state.error.msg,
 	errStatus: state.error.status,
+	googleSignIn: state.auth.googleSignIn,
 });
 
-export default connect(mapStateToProps, { registerThisUser, getThisUser })(
-	Register
-);
+export default connect(mapStateToProps, {
+	registerThisUser,
+	getThisUser,
+	googleSignIn,
+})(Register);

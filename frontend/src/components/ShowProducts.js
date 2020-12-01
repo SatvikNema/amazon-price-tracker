@@ -35,7 +35,7 @@ const ShowProducts = (props) => {
 						<h1>Data is loading...</h1>
 					) : (
 						<div>
-							<div class="header-info">
+							<div className="header-info">
 								<h2 id="num-products">
 									Number of products tracking:
 									{" " + props.profile.profile.items.length}
@@ -47,10 +47,10 @@ const ShowProducts = (props) => {
 									</strong>
 								</p>
 								{props.profile.profile.recieveEmails ? (
-									<p class="email-notification">
+									<p className="email-notification">
 										Email notifications for the same are on.
 										<button
-											class="btn btn-sm btn-danger ml-2"
+											className="btn btn-sm btn-danger ml-2"
 											onClick={
 												props.stopEmailNotification
 											}
@@ -59,11 +59,11 @@ const ShowProducts = (props) => {
 										</button>
 									</p>
 								) : (
-									<p class="email-notification">
+									<p className="email-notification">
 										Email notifications for the same are
 										off.
 										<button
-											class="btn btn-sm btn-success ml-2"
+											className="btn btn-sm btn-success ml-2"
 											onClick={
 												props.startEmailNotification
 											}
@@ -74,7 +74,7 @@ const ShowProducts = (props) => {
 								)}
 							</div>
 							<ul>
-								<div class="row">
+								<div className="row">
 									{props.profile.profile.items.map((item) => {
 										return (
 											<ProductCard
