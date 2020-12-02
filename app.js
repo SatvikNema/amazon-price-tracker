@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express"),
+	db = require("./models/db"),
 	session = require("express-session"),
 	mongoose = require("mongoose"),
 	MongoStore = require("connect-mongo")(session),
@@ -12,14 +13,7 @@ const express = require("express"),
 
 const app = express();
 app.use(express.json());
-const {
-	SESSION_NAME,
-	SESSION_SECRET,
-	PORT = 5000,
-	MONGODB_CONNECTION_URI_LOCAL,
-	MONGODB_CONNECTION_URI_ATLAS,
-	FRONTEND_URL,
-} = process.env;
+const { SESSION_NAME, SESSION_SECRET, PORT = 5000 } = process.env;
 
 app.use(
 	cors({
@@ -27,24 +21,13 @@ app.use(
 	})
 );
 
-mongoose.connect(MONGODB_CONNECTION_URI_LOCAL, {
-	useNewUrlParser: true,
-	useCreateIndex: true,
-	useUnifiedTopology: true,
-	useFindAndModify: false,
-});
-
-mongoose.connection.once("open", () => {
-	console.log("connection with mongoose established");
-});
-
 app.use(
 	session({
 		resave: false,
 		saveUninitialized: false,
 		secret: SESSION_SECRET,
 		store: new MongoStore({
-			mongooseConnection: mongoose.connection,
+			mongooseConnection: db,
 		}),
 		name: SESSION_NAME,
 		cookie: {
@@ -54,8 +37,15 @@ app.use(
 );
 
 // Session debugging
+
 // app.use((req, res, next) => {
-// 	console.log(req.session);
+// 	console.log(req.session.id);
+// 	db.collection("sessions")
+// 		.find({ _id: "Zx41ehEQh0Ve58lcAtLn3Rjt955UKGIt" })
+// 		.toArray((err, stuff) => {
+// 			if (err) console.log(err);
+// 			else console.log(stuff);
+// 		});
 // 	console.log("---------------------------");
 // 	next();
 // });

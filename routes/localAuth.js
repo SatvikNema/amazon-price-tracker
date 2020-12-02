@@ -1,7 +1,9 @@
 const router = require("express").Router(),
 	bcrypt = require("bcrypt"),
 	User = require("../models/user"),
-	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware");
+	db = require("../models/db"),
+	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware"),
+	{ sendVerificationEmail } = require("../utils/notifications");
 
 const validateEmail = (email) => {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -32,8 +34,29 @@ router.post("/register", homeRedirect, async (req, res) => {
 			});
 			req.session.userId = newUser._id;
 			await newUser.save();
-			return res.status(201).json({ msg: "Registered!", username });
+			// send virification email
+			const verificationLink =
+				process.env.LOCAL_DOMAIN +
+				"/verifyEmail/" +
+				req.session.id +
+				"/" +
+				email;
+			sendVerificationEmail(email, verificationLink);
+			return res
+				.status(201)
+				.json({
+					msg: "Registered! Now please verify your email",
+					username,
+				});
 		}
+	} catch (e) {
+		res.status(406).json({ err: e.message });
+	}
+});
+
+router.get("/verifyEmail/:sessionID/:email", async (req, res) => {
+	try {
+		console.log(req.params.email + " has clicked the verification link");
 	} catch (e) {
 		res.status(406).json({ err: e.message });
 	}
