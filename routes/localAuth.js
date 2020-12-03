@@ -34,7 +34,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			});
 			req.session.userId = newUser._id;
 			await newUser.save();
-			// send virification email
+			// send verification email
 			const verificationLink =
 				process.env.LOCAL_DOMAIN +
 				"/verifyEmail/" +
@@ -42,12 +42,10 @@ router.post("/register", homeRedirect, async (req, res) => {
 				"/" +
 				email;
 			sendVerificationEmail(email, verificationLink);
-			return res
-				.status(201)
-				.json({
-					msg: "Registered! Now please verify your email",
-					username,
-				});
+			return res.status(201).json({
+				msg: "Registered! Now please verify your email",
+				username,
+			});
 		}
 	} catch (e) {
 		res.status(406).json({ err: e.message });
@@ -56,7 +54,37 @@ router.post("/register", homeRedirect, async (req, res) => {
 
 router.get("/verifyEmail/:sessionID/:email", async (req, res) => {
 	try {
-		console.log(req.params.email + " has clicked the verification link");
+		const { sessionID, email } = req.params;
+		const sessionObject = await db
+			.collection("sessions")
+			.find({
+				_id: sessionID,
+			})
+			.toArray();
+		const { userId } = JSON.parse(sessionObject[0].session);
+
+		if (!userId) {
+			const deletedUser = await User.findOneAndRemove({
+				email,
+			});
+			if (deletedUser) console.log("old user deleted from db");
+			else console.log("error while deleting user: " + email);
+			return res.status(401).json({
+				err:
+					"Sorry the link is invalid, or has been expired. Try registering again",
+			});
+		}
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ err: "user not found" });
+		}
+		if (user.emailVerified) {
+			return res.json({ err: "The link has already been used." });
+		} else {
+			user.emailVerified = true;
+			await user.save();
+			return res.json({ user, msg: "Email is verified" });
+		}
 	} catch (e) {
 		res.status(406).json({ err: e.message });
 	}

@@ -40,8 +40,8 @@ app.use(
 
 // app.use((req, res, next) => {
 // 	console.log(req.session.id);
-// 	db.collection("sessions")
-// 		.find({ _id: "Zx41ehEQh0Ve58lcAtLn3Rjt955UKGIt" })
+//  db.collection("sessions")
+// 	.find({ _id: "Zx41ehEQh0Ve58lcAtLn3Rjt955UKGIt" })
 // 		.toArray((err, stuff) => {
 // 			if (err) console.log(err);
 // 			else console.log(stuff);
