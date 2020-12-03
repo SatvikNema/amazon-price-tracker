@@ -53,7 +53,7 @@ export const registerThisUser = (obj) => (dispatch) => {
 			if (response.err) {
 				throw new Error(response.err);
 			}
-			dispatch(clearErrors());
+			dispatch(returnErrors(response.msg, 200));
 			return dispatch({
 				type: REGISTER_SUCCESS,
 				payload: response,

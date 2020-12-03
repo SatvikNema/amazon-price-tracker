@@ -5,11 +5,12 @@ const router = require("express").Router(),
 	{
 		checkProductOwnership,
 		isAdminAccount,
+		isAuthorized,
 	} = require("../middleware/checkUserMiddleware"),
 	Product = require("../models/product"),
 	User = require("../models/user");
 
-router.post("/addProduct", isLoggedIn, async (req, res) => {
+router.post("/addProduct", isLoggedIn, isAuthorized, async (req, res) => {
 	try {
 		const { targetPrice, link, checkInMins } = req.body;
 		const details = await fetchProductDetails(link);
@@ -20,11 +21,6 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 			throw new Error("Product price already less than target price");
 		}
 		const productOnwer = await User.findById(req.session.userId);
-		if (!productOnwer) {
-			return res
-				.status(401)
-				.json("You are not authhorized to add a product.");
-		}
 		if (typeof productPrice === "number") {
 			const newProduct = new Product({
 				owner: {

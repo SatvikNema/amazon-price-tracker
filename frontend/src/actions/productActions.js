@@ -16,7 +16,7 @@ import {
 	emailOff,
 } from "../utils";
 
-import { returnErrors } from "./errorActions";
+import { returnErrors, clearErrors } from "./errorActions";
 
 // For scenrios where async actions are required, 3 main states used: start, running, finished
 
@@ -120,15 +120,16 @@ export const addThisProduct = (obj) => (dispatch) => {
 		.then((res) => res.json())
 		.then((response) => {
 			if (response.err) {
-				throw response;
+				throw new Error(response.err);
 			}
+			dispatch(clearErrors());
 			return dispatch({
 				type: END_REQUEST,
 			});
 		})
 		.catch((e) => {
 			dispatch(endRequest());
-			return dispatch(returnErrors(e.err, 406));
+			return dispatch(returnErrors(e.message, 406));
 		});
 };
 

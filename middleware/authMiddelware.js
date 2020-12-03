@@ -2,9 +2,9 @@ const isLoggedIn = (req, res, next) => {
 	if (req.session.userId || req.session.googleTokens) {
 		next();
 	} else {
-		res.status(401).json(
-			"sorry you are not authenticated to use this feature"
-		);
+		res.status(401).json({
+			err: "sorry you are not authenticated to use this feature",
+		});
 	}
 };
 
