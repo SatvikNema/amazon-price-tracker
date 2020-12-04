@@ -7,14 +7,14 @@ let url = null,
 	response = null;
 
 export const getProductList = async () => {
-	url = "/productList";
+	url = "/api/productList";
 
 	res = await fetch(url, options);
 	return res;
 };
 
 export const getUser = async () => {
-	url = "/getUser";
+	url = "/api/getUser";
 	res = await fetch(url, options);
 	if (res.ok) {
 		response = await res.json();
@@ -25,7 +25,7 @@ export const getUser = async () => {
 };
 
 export const addProduct = async (obj) => {
-	url = "/addProduct";
+	url = "/api/addProduct";
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -38,20 +38,20 @@ export const addProduct = async (obj) => {
 };
 
 export const updatePrice = async (id) => {
-	url = "/scheduledUpdate/" + id;
+	url = "/api/scheduledUpdate/" + id;
 	res = await fetch(url, options);
 	return res;
 };
 
 export const fetchProduct = async (id) => {
-	url = "/product/" + id;
+	url = "/api/product/" + id;
 	res = await fetch(url, options);
 
 	return res;
 };
 
 export const editProduct = async (id, obj) => {
-	url = "/editProduct/" + id;
+	url = "/api/editProduct/" + id;
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -64,16 +64,16 @@ export const editProduct = async (id, obj) => {
 };
 
 export const emailOn = async () => {
-	res = await fetch("/startGettingEmails");
+	res = await fetch("/api/startGettingEmails");
 	return res;
 };
 export const emailOff = async () => {
-	res = await fetch("/stopGettingEmails");
+	res = await fetch("/api/stopGettingEmails");
 	return res;
 };
 
 export const deleteProduct = async (id) => {
-	url = "/deleteProduct/" + id;
+	url = "/api/deleteProduct/" + id;
 	res = await fetch(url, {
 		...options,
 		method: "DELETE",
@@ -82,7 +82,8 @@ export const deleteProduct = async (id) => {
 };
 
 export const registerUser = async (obj) => {
-	url = "/register";
+	url = "/api/register";
+	console.log(url);
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -94,7 +95,7 @@ export const registerUser = async (obj) => {
 	return res;
 };
 export const loginUser = async (obj) => {
-	url = "/login";
+	url = "/api/login";
 	res = await fetch(url, {
 		...options,
 		method: "POST",
@@ -107,7 +108,7 @@ export const loginUser = async (obj) => {
 };
 
 export const sendAccessToken = async (token) => {
-	const res = await fetch("/useAccessToken", {
+	const res = await fetch("/api/useAccessToken", {
 		...options,
 		method: "POST",
 		headers: {
@@ -119,7 +120,7 @@ export const sendAccessToken = async (token) => {
 };
 
 export const logoutUser = async () => {
-	url = "/logout";
+	url = "/api/logout";
 	res = await fetch(url, options);
 	return res;
 };

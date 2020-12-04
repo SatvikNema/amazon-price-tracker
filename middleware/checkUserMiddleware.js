@@ -35,7 +35,7 @@ const isAuthorized = async (req, res, next) => {
 const checkProductOwnership = async (req, res, next) => {
 	const product = await Product.findById(req.params.id);
 	if (!product) {
-		return res.status(404).json("product does not exists");
+		return res.status(404).json({ err: "product does not exists" });
 	}
 	if (
 		product &&
@@ -44,7 +44,9 @@ const checkProductOwnership = async (req, res, next) => {
 	) {
 		return next();
 	}
-	return res.status(401).json("Not allowed to access other person's product");
+	return res
+		.status(401)
+		.json({ err: "Not allowed to access other person's product" });
 };
 
 module.exports = {

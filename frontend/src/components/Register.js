@@ -15,9 +15,9 @@ const Register = (props) => {
 	const [inputError, setInputError] = useState(null);
 
 	const handleSubmit = async (e) => {
+		e.preventDefault();
 		setInputError(null);
 		try {
-			e.preventDefault();
 			if (username && email && password) {
 				const obj = {
 					username,

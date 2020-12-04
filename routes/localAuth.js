@@ -12,7 +12,9 @@ const validateEmail = (email) => {
 
 router.post("/register", homeRedirect, async (req, res) => {
 	try {
+		console.log("hit??");
 		const { username, password, email } = req.body;
+		console.log({ username, password, email });
 		if (!username || !password || !email) {
 			return res.status(401).json({ err: "All fields are compulsory" });
 		}
@@ -37,7 +39,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			// send verification email
 			const verificationLink =
 				process.env.LOCAL_DOMAIN +
-				"/verifyEmail/" +
+				"/api/verifyEmail/" +
 				req.session.id +
 				"/" +
 				email;
@@ -48,7 +50,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			});
 		}
 	} catch (e) {
-		res.status(406).json({ err: e.message });
+		res.status(406).json({ err: e.message + "lol wtf" });
 	}
 });
 
@@ -83,7 +85,10 @@ router.get("/verifyEmail/:sessionID/:email", async (req, res) => {
 		} else {
 			user.emailVerified = true;
 			await user.save();
-			return res.json({ user, msg: "Email is verified" });
+			return res.json({
+				msg: "Email is verified. Now you can close this tab.",
+			});
+			// return res.redirect("/");
 		}
 	} catch (e) {
 		res.status(406).json({ err: e.message });
@@ -163,10 +168,10 @@ router.get("/logout", isLoggedIn, (req, res) => {
 			res.clearCookie(process.env.SESSION_NAME);
 			return res
 				.status(200)
-				.json("Logged out. The session was destroyed.");
+				.json({ msg: "Logged out. The session was destroyed." });
 		});
 	} catch (e) {
-		return res.status(406).json("Something went wrong: " + e);
+		return res.status(406).json({ err: e.message });
 	}
 });
 

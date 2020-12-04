@@ -50,20 +50,30 @@ app.use(
 // 	next();
 // });
 
-app.use(productRoutes);
-app.use(localAuthRoutes);
-app.use(googleAuthRoutes);
-app.use(cronRoute);
+// app.use((req, res, next) => {
+// 	console.log(req.get("host"));
+// 	console.log(req.hostname);
+// 	return next();
+// });
 
-// Serve static assets (if in production)
-if (process.env.NODE_ENV == "production") {
-	app.use(express.static("frontend/build"));
-	app.get("*", (req, res) => {
-		res.sendFile(
-			path.resolve(__dirname, "frontend", "build", "index.html")
-		);
-	});
-}
+app.use("/api", productRoutes);
+app.use("/api", localAuthRoutes);
+app.use("/api", googleAuthRoutes);
+app.use("/api", cronRoute);
+
+app.use(express.static("frontend/build"));
+app.get("*", (req, res) => {
+	res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+});
+// if (process.env.NODE_ENV == "production") {
+// 	app.use(express.static("frontend/build"));
+// 	app.get("*", (req, res) => {
+// 		res.sendFile(
+// 			path.resolve(__dirname, "frontend", "build", "index.html")
+// 		);
+// 	});
+
+// }
 
 app.listen(PORT, () => {
 	console.log("server started...");
