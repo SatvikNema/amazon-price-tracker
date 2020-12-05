@@ -9,23 +9,18 @@ router.get("/getGoogleAuthURL", (req, res) => {
 	return res.json({ url });
 });
 
-// No third party bullshit <3. Just gets the access token in the x-auth-header
-// and then gets the user details by a simple API call using the token
 router.post("/useAccessToken", homeRedirect, async (req, res) => {
 	try {
-		// console.log(req.body);
 		const { access_token } = req.body;
 		const userProfile = await (
 			await fetch(
 				`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`
 			)
 		).json();
-		// console.log(userProfile);
 		if (!userProfile) {
 			return res.status(401).json({ err: err.message });
 		} else {
 			const { email, name } = userProfile;
-			console.log({ email, name });
 			const oldUser = await User.findOne({ email });
 			if (oldUser && !oldUser.googleUser) {
 				return res.status(401).json({
@@ -41,6 +36,7 @@ router.post("/useAccessToken", homeRedirect, async (req, res) => {
 						googleUserName: name,
 						email,
 						items: [],
+						emailVerified: true,
 					});
 					await newUser.save();
 					req.session.userId = newUser._id;

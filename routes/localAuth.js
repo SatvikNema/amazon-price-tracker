@@ -12,9 +12,7 @@ const validateEmail = (email) => {
 
 router.post("/register", homeRedirect, async (req, res) => {
 	try {
-		console.log("hit??");
 		const { username, password, email } = req.body;
-		console.log({ username, password, email });
 		if (!username || !password || !email) {
 			return res.status(401).json({ err: "All fields are compulsory" });
 		}
@@ -38,7 +36,7 @@ router.post("/register", homeRedirect, async (req, res) => {
 			await newUser.save();
 			// send verification email
 			const verificationLink =
-				process.env.LOCAL_DOMAIN +
+				process.env.HOSTED_DOMAIN_HEROKU +
 				"/api/verifyEmail/" +
 				req.session.id +
 				"/" +
@@ -69,8 +67,6 @@ router.get("/verifyEmail/:sessionID/:email", async (req, res) => {
 			const deletedUser = await User.findOneAndRemove({
 				email,
 			});
-			if (deletedUser) console.log("old user deleted from db");
-			else console.log("error while deleting user: " + email);
 			return res.status(401).json({
 				err:
 					"Sorry the link is invalid, or has been expired. Try registering again",
@@ -151,6 +147,7 @@ router.get("/stopGettingEmails", isLoggedIn, async (req, res) => {
 		return res.status(406).json({ err: e.message });
 	}
 });
+
 router.get("/startGettingEmails", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);

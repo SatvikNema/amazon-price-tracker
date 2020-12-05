@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express"),
 	db = require("./models/db"),
 	session = require("express-session"),
-	mongoose = require("mongoose"),
 	MongoStore = require("connect-mongo")(session),
 	cors = require("cors"),
 	path = require("path"),
@@ -37,7 +36,6 @@ app.use(
 );
 
 // Session debugging
-
 // app.use((req, res, next) => {
 // 	console.log(req.session.id);
 //  db.collection("sessions")
@@ -50,30 +48,19 @@ app.use(
 // 	next();
 // });
 
-// app.use((req, res, next) => {
-// 	console.log(req.get("host"));
-// 	console.log(req.hostname);
-// 	return next();
-// });
-
 app.use("/api", productRoutes);
 app.use("/api", localAuthRoutes);
 app.use("/api", googleAuthRoutes);
 app.use("/api", cronRoute);
 
-app.use(express.static("frontend/build"));
-app.get("*", (req, res) => {
-	res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-});
-// if (process.env.NODE_ENV == "production") {
-// 	app.use(express.static("frontend/build"));
-// 	app.get("*", (req, res) => {
-// 		res.sendFile(
-// 			path.resolve(__dirname, "frontend", "build", "index.html")
-// 		);
-// 	});
-
-// }
+if (process.env.NODE_ENV == "production") {
+	app.use(express.static("frontend/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(
+			path.resolve(__dirname, "frontend", "build", "index.html")
+		);
+	});
+}
 
 app.listen(PORT, () => {
 	console.log("server started...");

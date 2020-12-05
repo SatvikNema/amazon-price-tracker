@@ -4,7 +4,6 @@ const router = require("express").Router(),
 	{ isLoggedIn } = require("../middleware/authMiddelware"),
 	{
 		checkProductOwnership,
-		isAdminAccount,
 		isAuthorized,
 	} = require("../middleware/checkUserMiddleware"),
 	Product = require("../models/product"),
@@ -86,7 +85,6 @@ router.get("/productList", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);
 		const userWithProducts = await user.populate("items").execPopulate();
-		// console.log(userWithProducts.items.length);
 		res.status(200).json(userWithProducts);
 	} catch (e) {
 		return res.status(406).json("Something went wrong: " + e);
@@ -159,8 +157,12 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 	}
 });
 
-router.get("/updateAll", isAdminAccount, async (req, res) => {
+router.get("/updateAll/:pass", async (req, res) => {
 	try {
+		if (req.params.pass !== process.env.UPDATE_PASSWORD) {
+			return res.status(401).json({ err: "wrong password" });
+		}
+
 		const products = await Product.find();
 		const promisedOfUpdates = products.map(updateDetail);
 		await Promise.all(promisedOfUpdates);
