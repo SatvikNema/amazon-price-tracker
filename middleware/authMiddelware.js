@@ -1,5 +1,5 @@
 const isLoggedIn = (req, res, next) => {
-	if (req.session.userId || req.session.googleTokens) {
+	if (req.session.userId) {
 		next();
 	} else {
 		res.status(401).json({
@@ -9,7 +9,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 const homeRedirect = (req, res, next) => {
-	if (req.session.userId || req.session.googleTokens) {
+	if (req.session.userId) {
 		return res.status(406).json({ err: "You are already logged in!" });
 	} else {
 		next();
