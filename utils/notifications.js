@@ -43,14 +43,6 @@ const sendNotificationEmail = (
 	currentPrice,
 	targetPrice
 ) => {
-	let transporter = {
-		service: "gmail",
-		auth: {
-			user: process.env.SENDER_USERNAME,
-			pass: process.env.PASSWORD,
-		},
-	};
-
 	let mailOptions = {
 		from: process.env.SENDER_USERNAME,
 		to: recipientEmail,
@@ -60,12 +52,33 @@ const sendNotificationEmail = (
 			<hr>
 			Delete this product from your profile to stop getting repeated emails. Thank you`,
 	};
-	dispatchMail(transporter, mailOptions);
+	dispatchMail(mailOptions);
 };
 
-const dispatchMail = (transporterDetails, mailOptions) => {
-	const transporter = nodemailer.createTransport(transporterDetails);
+const sendVerificationEmail = (recipientEmail, verificationLink) => {
+	let mailOptions = {
+		from: process.env.SENDER_USERNAME,
+		to: recipientEmail,
+		subject: "Email verification",
+		html: `Thank you for registering :) <br> 
+			<a href="${verificationLink}">Click on this link to verify</a>
+			<hr>
+			If you cannot go to the above hyperlink, click here: ${verificationLink}
+			If this is still not a link, kindly copy paste this URL in your browser and proceed.
+		`,
+	};
+	dispatchMail(mailOptions);
+};
 
+const dispatchMail = (mailOptions) => {
+	let transporterDetails = {
+		service: "gmail",
+		auth: {
+			user: process.env.SENDER_USERNAME,
+			pass: process.env.PASSWORD,
+		},
+	};
+	const transporter = nodemailer.createTransport(transporterDetails);
 	transporter.sendMail(mailOptions, function (error, info) {
 		if (error) {
 			console.log(error);
@@ -78,4 +91,5 @@ const dispatchMail = (transporterDetails, mailOptions) => {
 module.exports = {
 	dispatchMail,
 	updateDetail,
+	sendVerificationEmail,
 };

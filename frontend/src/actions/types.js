@@ -5,10 +5,12 @@ export const DELETE_PRODUCT = "DELETE_PRODUCT";
 export const ITEMS_LOADING = "ITEMS_LOADING";
 export const SINGLE_ITEM_LOADING = "SINGLE_ITEM_LOADING";
 
+// API request stages
 export const ADD_PRODUCT = "ADD_PRODUCT";
 export const END_REQUEST = "END_REQUEST";
 export const START_REQUEST = "START_REQUEST";
 
+// Local Auth actions
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";
 export const AUTH_ERROR = "AUTH_ERROR";
@@ -20,5 +22,6 @@ export const REGISTER_FAIL = "REGISTER_FAIL";
 export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 
-export const EMAIL_NOTIFICATION_ON = "EMAIL_NOTIFICATION_ON";
-export const EMAIL_NOTIFICATION_OFF = "EMAIL_NOTIFICATION_OFF";
+// Google auth action
+export const GOOGLE_SIGN_IN_SUCCESS = "GOOGLE_SIGN_IN_SUCCESS";
+export const GOOGLE_SIGN_IN_FAIL = "GOOGLE_AUTH_FAIL";

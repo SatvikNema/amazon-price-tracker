@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { loginThisUser, getThisUser } from "../actions/authActions";
+import GoogleSignInButton from "./GoogleSignInButton";
+
+import {
+	loginThisUser,
+	getThisUser,
+	googleSignIn,
+} from "../actions/authActions";
 
 const Login = (props) => {
 	const [username, setUsername] = useState("");
@@ -20,10 +26,13 @@ const Login = (props) => {
 		props.getThisUser();
 	}, []);
 
+	const googleResponse = (response) => {
+		props.googleSignIn(response.accessToken);
+	};
 	return (
 		<div>
 			{props.errStatus && <h1>{props.errMsg}</h1>}
-			{props.isLoading ? (
+			{props.isLoading && !props.googleAuthURL ? (
 				<h1>Getting the user...</h1>
 			) : (
 				<div>
@@ -31,14 +40,16 @@ const Login = (props) => {
 						<div>
 							Your are now logged in.{" "}
 							<Link to="/">
-								<button>Go to home page</button>
+								<button className="btn btn-xl btn-success">
+									Go to home page
+								</button>
 							</Link>
 						</div>
 					) : (
 						<div>
 							<h1>Login page</h1>
 							<form method="post">
-								<div class="form-group">
+								<div className="form-group">
 									<label htmlFor="UN">Username: </label>
 									<input
 										type="text"
@@ -48,10 +59,10 @@ const Login = (props) => {
 										}
 										name="username"
 										id="UN"
-										class="form-control ip"
+										className="form-control ip"
 									/>
 								</div>
-								<div class="form-group">
+								<div className="form-group">
 									<label htmlFor="PW">Password: </label>
 									<input
 										type="password"
@@ -61,20 +72,22 @@ const Login = (props) => {
 										}
 										name="password"
 										id="PW"
-										class="form-control ip"
+										className="form-control ip"
 									/>
 								</div>
 								<div>
 									<button
-										// class="form-control"
+										// className="form-control"
 										type="submit"
 										onClick={handleSubmit}
-										class="btn btn-sm btn-primary"
+										className="btn btn-sm btn-primary"
 									>
 										Submit
 									</button>
 								</div>
 							</form>
+							<h4>OR</h4>
+							<GoogleSignInButton onSuccess={googleResponse} />
 						</div>
 					)}
 				</div>
@@ -88,6 +101,11 @@ const mapStateToProps = (state) => ({
 	isLoading: state.auth.isLoading,
 	errMsg: state.error.msg,
 	errStatus: state.error.status,
+	googleSignIn: state.auth.googleSignIn,
 });
 
-export default connect(mapStateToProps, { loginThisUser, getThisUser })(Login);
+export default connect(mapStateToProps, {
+	loginThisUser,
+	getThisUser,
+	googleSignIn,
+})(Login);

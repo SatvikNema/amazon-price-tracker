@@ -1,7 +1,9 @@
 const router = require("express").Router(),
 	bcrypt = require("bcrypt"),
 	User = require("../models/user"),
-	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware");
+	db = require("../models/db"),
+	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware"),
+	{ sendVerificationEmail } = require("../utils/notifications");
 
 const validateEmail = (email) => {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -32,7 +34,57 @@ router.post("/register", homeRedirect, async (req, res) => {
 			});
 			req.session.userId = newUser._id;
 			await newUser.save();
-			return res.status(201).json({ msg: "Registered!", username });
+			// send verification email
+			const verificationLink =
+				process.env.HOSTED_DOMAIN_HEROKU +
+				"/api/verifyEmail/" +
+				req.session.id +
+				"/" +
+				email;
+			sendVerificationEmail(email, verificationLink);
+			return res.status(201).json({
+				msg: "Registered! Now please verify your email",
+				username,
+			});
+		}
+	} catch (e) {
+		res.status(406).json({ err: e.message + "lol wtf" });
+	}
+});
+
+router.get("/verifyEmail/:sessionID/:email", async (req, res) => {
+	try {
+		const { sessionID, email } = req.params;
+		const sessionObject = await db
+			.collection("sessions")
+			.find({
+				_id: sessionID,
+			})
+			.toArray();
+		const { userId } = JSON.parse(sessionObject[0].session);
+
+		if (!userId) {
+			const deletedUser = await User.findOneAndRemove({
+				email,
+			});
+			return res.status(401).json({
+				err:
+					"Sorry the link is invalid, or has been expired. Try registering again",
+			});
+		}
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ err: "user not found" });
+		}
+		if (user.emailVerified) {
+			return res.json({ err: "The link has already been used." });
+		} else {
+			user.emailVerified = true;
+			await user.save();
+			return res.json({
+				msg: "Email is verified. Now you can close this tab.",
+			});
+			// return res.redirect("/");
 		}
 	} catch (e) {
 		res.status(406).json({ err: e.message });
@@ -47,6 +99,10 @@ router.post("/login", homeRedirect, async (req, res) => {
 		});
 		if (!user) {
 			return res.status(404).json({ err: "This user does not exist" });
+		} else if (user.googleUser) {
+			return res.status(401).json({
+				err: "This user has an account through google sing in",
+			});
 		} else {
 			const matched = await bcrypt.compare(password, user.password);
 			if (matched) {
@@ -67,8 +123,13 @@ router.post("/login", homeRedirect, async (req, res) => {
 router.get("/getUser", async (req, res) => {
 	if (req.session.userId) {
 		const user = await User.findById(req.session.userId);
-		if (user) return res.json({ username: user.username });
-		else {
+		if (user) {
+			if (user.googleUser) {
+				return res.json({ username: user.googleUserName });
+			} else {
+				return res.json({ username: user.username });
+			}
+		} else {
 			return res.status(404).json({ username: null });
 		}
 	} else {
@@ -86,6 +147,7 @@ router.get("/stopGettingEmails", isLoggedIn, async (req, res) => {
 		return res.status(406).json({ err: e.message });
 	}
 });
+
 router.get("/startGettingEmails", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);
@@ -103,10 +165,10 @@ router.get("/logout", isLoggedIn, (req, res) => {
 			res.clearCookie(process.env.SESSION_NAME);
 			return res
 				.status(200)
-				.json("Logged out. The session was destroyed.");
+				.json({ msg: "Logged out. The session was destroyed." });
 		});
 	} catch (e) {
-		return res.status(406).json("Something went wrong: " + e);
+		return res.status(406).json({ err: e.message });
 	}
 });
 

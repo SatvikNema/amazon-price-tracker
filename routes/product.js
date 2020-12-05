@@ -4,12 +4,12 @@ const router = require("express").Router(),
 	{ isLoggedIn } = require("../middleware/authMiddelware"),
 	{
 		checkProductOwnership,
-		isAdminAccount,
+		isAuthorized,
 	} = require("../middleware/checkUserMiddleware"),
 	Product = require("../models/product"),
 	User = require("../models/user");
 
-router.post("/addProduct", isLoggedIn, async (req, res) => {
+router.post("/addProduct", isLoggedIn, isAuthorized, async (req, res) => {
 	try {
 		const { targetPrice, link, checkInMins } = req.body;
 		const details = await fetchProductDetails(link);
@@ -20,11 +20,6 @@ router.post("/addProduct", isLoggedIn, async (req, res) => {
 			throw new Error("Product price already less than target price");
 		}
 		const productOnwer = await User.findById(req.session.userId);
-		if (!productOnwer) {
-			return res
-				.status(401)
-				.json("You are not authhorized to add a product.");
-		}
 		if (typeof productPrice === "number") {
 			const newProduct = new Product({
 				owner: {
@@ -90,7 +85,6 @@ router.get("/productList", isLoggedIn, async (req, res) => {
 	try {
 		const user = await User.findById(req.session.userId);
 		const userWithProducts = await user.populate("items").execPopulate();
-		// console.log(userWithProducts.items.length);
 		res.status(200).json(userWithProducts);
 	} catch (e) {
 		return res.status(406).json("Something went wrong: " + e);
@@ -163,8 +157,12 @@ router.delete("/deleteProduct/:id", checkProductOwnership, async (req, res) => {
 	}
 });
 
-router.get("/updateAll", isAdminAccount, async (req, res) => {
+router.get("/updateAll/:pass", async (req, res) => {
 	try {
+		if (req.params.pass !== process.env.UPDATE_PASSWORD) {
+			return res.status(401).json({ err: "wrong password" });
+		}
+
 		const products = await Product.find();
 		const promisedOfUpdates = products.map(updateDetail);
 		await Promise.all(promisedOfUpdates);

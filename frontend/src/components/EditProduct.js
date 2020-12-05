@@ -46,7 +46,7 @@ const EditProduct = (props) => {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="link">Amazon product link: </label>
 					<input
 						type="text"
@@ -54,11 +54,11 @@ const EditProduct = (props) => {
 						id="link"
 						onChange={(e) => localLink(e.target.value)}
 						value={localLink}
-						class="form-control ip"
+						className="form-control ip"
 					/>
 				</div>
 
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="target">Target price: </label>
 					<input
 						type="number"
@@ -66,10 +66,10 @@ const EditProduct = (props) => {
 						id="target"
 						onChange={(e) => setPrice(e.target.value)}
 						value={price}
-						class="form-control ip"
+						className="form-control ip"
 					/>
 				</div>
-				<div class="form-group">
+				<div className="form-group">
 					<label htmlFor="check">Check in (mins): </label>
 					<input
 						type="number"
@@ -77,11 +77,11 @@ const EditProduct = (props) => {
 						id="check"
 						onChange={(e) => setCheckIn(e.target.value)}
 						value={checkIn}
-						class="form-control ip"
+						className="form-control ip"
 					/>
 				</div>
-				<div class="form-group">
-					<button type="submit" class="btn btn-sm btn-warning">
+				<div className="form-group">
+					<button type="submit" className="btn btn-sm btn-warning">
 						Submit
 					</button>
 				</div>
