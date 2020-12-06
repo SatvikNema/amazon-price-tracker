@@ -1,8 +1,9 @@
-const router = require("express").Router(),
-	{ getAuthUrl } = require("../utils/googleKaKaam"),
-	User = require("../models/user"),
-	fetch = require("node-fetch"),
-	{ homeRedirect } = require("../middleware/authMiddelware");
+import express from "express";
+const router = express.Router();
+import { getAuthUrl } from "../utils/googleKaKaam";
+import User from "../models/user";
+import fetch from "node-fetch";
+import { homeRedirect } from "../middleware/authMiddelware";
 
 router.get("/getGoogleAuthURL", (req, res) => {
 	const url = getAuthUrl();
@@ -58,4 +59,4 @@ router.post("/useAccessToken", homeRedirect, async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;

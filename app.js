@@ -1,18 +1,20 @@
-require("dotenv").config();
-const express = require("express"),
-	db = require("./models/db"),
-	session = require("express-session"),
-	MongoStore = require("connect-mongo")(session),
-	cors = require("cors"),
-	path = require("path"),
-	productRoutes = require("./routes/product"),
-	localAuthRoutes = require("./routes/localAuth"),
-	googleAuthRoutes = require("./routes/googleAuth"),
-	cronRoute = require("./routes/cronSettings");
+import {} from "dotenv/config";
+import express from "express";
+import session from "express-session";
+import store from "connect-mongo";
+import cors from "cors";
+import path from "path";
+import productRoutes from "./routes/product";
+import localAuthRoutes from "./routes/localAuth";
+import googleAuthRoutes from "./routes/googleAuth";
+import cronRoute from "./routes/cronSettings";
+import db from "./models/db";
 
-const app = express();
+const app = express(),
+	MongoStore = store(session),
+	{ SESSION_NAME, SESSION_SECRET, PORT = 5000 } = process.env;
+
 app.use(express.json());
-const { SESSION_NAME, SESSION_SECRET, PORT = 5000 } = process.env;
 
 app.use(
 	cors({

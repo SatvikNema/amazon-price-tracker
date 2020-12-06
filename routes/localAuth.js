@@ -1,9 +1,10 @@
-const router = require("express").Router(),
-	bcrypt = require("bcrypt"),
-	User = require("../models/user"),
-	db = require("../models/db"),
-	{ homeRedirect, isLoggedIn } = require("../middleware/authMiddelware"),
-	{ sendVerificationEmail } = require("../utils/notifications");
+import express from "express";
+const router = express.Router();
+import bcrypt from "bcrypt";
+import User from "../models/user";
+import db from "../models/db";
+import { homeRedirect, isLoggedIn } from "../middleware/authMiddelware";
+import { sendVerificationEmail } from "../utils/notifications";
 
 const validateEmail = (email) => {
 	var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -172,4 +173,4 @@ router.get("/logout", isLoggedIn, (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;

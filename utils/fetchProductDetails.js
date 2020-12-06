@@ -1,22 +1,17 @@
-const cheerio = require("cheerio"),
-	{ sendHTTPRequest } = require("./sendHTTPRequest");
+import cheerio from "cheerio";
+import { sendHTTPRequest } from "./sendHTTPRequest";
 
 const loadHTML = async (url) => {
 	try {
 		// Sending the request to get the product page of amazon, in raw html
-		const productHtmlPage = await sendHTTPRequest(
-			(method = "GET"),
-			(url = url),
-			(obj = {}),
-			(isJSON = false)
-		);
+		const productHtmlPage = await sendHTTPRequest("GET", url, {}, false);
 		const loadedHTML = cheerio.load(productHtmlPage);
 		return loadedHTML;
 	} catch (e) {
 		console.log(e);
 	}
 };
-const fetchProductDetails = async (url) => {
+export const fetchProductDetails = async (url) => {
 	try {
 		// Fetching the price
 		const pageHandle = await loadHTML(url);
@@ -77,14 +72,10 @@ const fetchProductDetails = async (url) => {
 			productImage,
 		};
 	} catch (e) {
-		throw "Error occcured in fetchProductDeatils.js: " + e;
+		throw "Error occcured in fetchProductDetails.js: " + e.message;
 	}
 };
 
 const fetchNumericalPrice = (priceElement) => {
 	return parseInt(priceElement.text().trim().slice(2).replace(/,/g, ""));
-};
-
-module.exports = {
-	fetchProductDetails,
 };

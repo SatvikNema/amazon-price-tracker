@@ -1,13 +1,14 @@
-const router = require("express").Router(),
-	{ updateDetail } = require("../utils/notifications"),
-	{ fetchProductDetails } = require("../utils/fetchProductDetails"),
-	{ isLoggedIn } = require("../middleware/authMiddelware"),
-	{
-		checkProductOwnership,
-		isAuthorized,
-	} = require("../middleware/checkUserMiddleware"),
-	Product = require("../models/product"),
-	User = require("../models/user");
+import express from "express";
+const router = express.Router();
+import { updateDetail } from "../utils/notifications";
+import { fetchProductDetails } from "../utils/fetchProductDetails";
+import { isLoggedIn } from "../middleware/authMiddelware";
+import {
+	checkProductOwnership,
+	isAuthorized,
+} from "../middleware/checkUserMiddleware";
+import Product from "../models/product";
+import User from "../models/user";
 
 router.post("/addProduct", isLoggedIn, isAuthorized, async (req, res) => {
 	try {
@@ -172,4 +173,4 @@ router.get("/updateAll/:pass", async (req, res) => {
 	}
 });
 
-module.exports = router;
+export default router;

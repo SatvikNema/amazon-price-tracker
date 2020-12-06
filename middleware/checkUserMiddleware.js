@@ -1,7 +1,7 @@
-const User = require("../models/user"),
-	Product = require("../models/product");
+import User from "../models/user";
+import Product from "../models/product";
 
-const isAdminAccount = async (req, res, next) => {
+export const isAdminAccount = async (req, res, next) => {
 	try {
 		if (req.session.userId) {
 			const user = await User.findById(req.session.userId);
@@ -19,7 +19,7 @@ const isAdminAccount = async (req, res, next) => {
 	}
 };
 
-const isAuthorized = async (req, res, next) => {
+export const isAuthorized = async (req, res, next) => {
 	const productOnwer = await User.findById(req.session.userId);
 	if (!productOnwer) {
 		return res
@@ -32,7 +32,7 @@ const isAuthorized = async (req, res, next) => {
 	return next();
 };
 
-const checkProductOwnership = async (req, res, next) => {
+export const checkProductOwnership = async (req, res, next) => {
 	const product = await Product.findById(req.params.id);
 	if (!product) {
 		return res.status(404).json({ err: "product does not exists" });
@@ -47,10 +47,4 @@ const checkProductOwnership = async (req, res, next) => {
 	return res
 		.status(401)
 		.json({ err: "Not allowed to access other person's product" });
-};
-
-module.exports = {
-	isAdminAccount,
-	checkProductOwnership,
-	isAuthorized,
 };

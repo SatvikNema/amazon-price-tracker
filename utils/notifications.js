@@ -1,8 +1,8 @@
-const nodemailer = require("nodemailer"),
-	{ fetchProductDetails } = require("./fetchProductDetails"),
-	User = require("../models/user");
+import nodemailer from "nodemailer";
+import { fetchProductDetails } from "./fetchProductDetails";
+import User from "../models/user";
 
-const updateDetail = async (product) => {
+export const updateDetail = async (product) => {
 	try {
 		const details = await fetchProductDetails(product.link);
 		const productPrice = details.price,
@@ -37,7 +37,7 @@ const updateDetail = async (product) => {
 	}
 };
 
-const sendNotificationEmail = (
+export const sendNotificationEmail = (
 	recipientEmail,
 	title,
 	currentPrice,
@@ -70,7 +70,7 @@ const sendVerificationEmail = (recipientEmail, verificationLink) => {
 	dispatchMail(mailOptions);
 };
 
-const dispatchMail = (mailOptions) => {
+export const dispatchMail = (mailOptions) => {
 	let transporterDetails = {
 		service: "gmail",
 		auth: {
@@ -86,10 +86,4 @@ const dispatchMail = (mailOptions) => {
 			console.log("Email sent: " + info.response);
 		}
 	});
-};
-
-module.exports = {
-	dispatchMail,
-	updateDetail,
-	sendVerificationEmail,
 };

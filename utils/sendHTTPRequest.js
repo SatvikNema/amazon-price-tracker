@@ -1,6 +1,6 @@
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+import { XMLHttpRequest } from "xmlhttprequest";
 
-const sendHTTPRequest = (method, url, obj, isJSON) => {
+export const sendHTTPRequest = (method, url, obj, isJSON) => {
 	const promise = new Promise((resolve, reject) => {
 		const request = new XMLHttpRequest();
 
@@ -27,8 +27,4 @@ const sendHTTPRequest = (method, url, obj, isJSON) => {
 		};
 	});
 	return promise;
-};
-
-module.exports = {
-	sendHTTPRequest,
 };

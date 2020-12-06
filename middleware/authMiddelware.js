@@ -1,4 +1,4 @@
-const isLoggedIn = (req, res, next) => {
+export const isLoggedIn = (req, res, next) => {
 	if (req.session.userId) {
 		next();
 	} else {
@@ -8,15 +8,10 @@ const isLoggedIn = (req, res, next) => {
 	}
 };
 
-const homeRedirect = (req, res, next) => {
+export const homeRedirect = (req, res, next) => {
 	if (req.session.userId) {
 		return res.status(406).json({ err: "You are already logged in!" });
 	} else {
 		next();
 	}
-};
-
-module.exports = {
-	isLoggedIn,
-	homeRedirect,
 };

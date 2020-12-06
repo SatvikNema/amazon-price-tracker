@@ -1,10 +1,11 @@
-const mongoose = require("mongoose"),
-	{
-		MONGODB_CONNECTION_URI_LOCAL,
-		MONGODB_CONNECTION_URI_ATLAS,
-	} = process.env;
+import mongoose from "mongoose";
 
-mongoose.connect(MONGODB_CONNECTION_URI_ATLAS, {
+const {
+	MONGODB_CONNECTION_URI_LOCAL,
+	MONGODB_CONNECTION_URI_ATLAS,
+} = process.env;
+
+mongoose.connect(MONGODB_CONNECTION_URI_LOCAL, {
 	useNewUrlParser: true,
 	useCreateIndex: true,
 	useUnifiedTopology: true,
@@ -17,4 +18,4 @@ mongoose.connection.once("open", () => {
 
 const db = mongoose.connection;
 
-module.exports = db;
+export default db;

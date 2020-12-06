@@ -1,14 +1,14 @@
-const router = require("express").Router(),
-	cronJob = require("cron").CronJob,
-	Product = require("../models/product"),
-	{ updateDetail } = require("../utils/notifications"),
-	{ isAdminAccount } = require("../middleware/checkUserMiddleware");
+import express from "express";
+const router = express.Router();
+import { CronJob as cronJob } from "cron";
+import Product from "../models/product";
+import { updateDetail } from "../utils/notifications";
+import { isAdminAccount } from "../middleware/checkUserMiddleware";
 
-const cronTimeString = "0 6 */1 * *",
+const cronTimeString = "0 6 */1 * *", // "*/20 * * * * *",  "0 6 */1 * *"
 	onComplete = null,
 	start = false,
 	timeZone = "Asia/Kolkata";
-// const cronTimeString = "*/20 * * * * *",
 
 let updateJob = null;
 async function onTick() {
@@ -49,4 +49,5 @@ router.get("/stopUpdateJob", isAdminAccount, async (req, res) => {
 		console.log(e);
 	}
 });
-module.exports = router;
+
+export default router;
