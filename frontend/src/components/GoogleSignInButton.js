@@ -10,6 +10,7 @@ const GoogleSignInButton = (props) => {
 				buttonText="Login"
 				onSuccess={props.onSuccess}
 				onFailure={props.onSuccess}
+				autoload={false}
 			/>
 		</div>
 	);
