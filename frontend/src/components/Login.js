@@ -86,8 +86,8 @@ const Login = (props) => {
 									</button>
 								</div>
 							</form>
-							<h4>OR</h4>
-							<GoogleSignInButton onSuccess={googleResponse} />
+							{/* <h4>OR</h4>
+							<GoogleSignInButton onSuccess={googleResponse} /> */}
 						</div>
 					)}
 				</div>
